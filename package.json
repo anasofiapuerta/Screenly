@@ -1,0 +1,20 @@
+{
+  "name": "screenly",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Screenly - Control y gestión inteligente del tiempo de uso de aplicaciones para bienestar digital",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Screenly build ready for Vercel'",
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "screenly",
+    "digital-wellbeing",
+    "android",
+    "jetpack-compose",
+    "screen-time"
+  ],
+  "author": "Screenly Team",
+  "license": "MIT"
+}

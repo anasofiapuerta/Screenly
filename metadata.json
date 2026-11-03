@@ -1,0 +1,6 @@
+{
+  "name": "Screenly",
+  "description": "Control y gestión inteligente del tiempo de uso de aplicaciones para bienestar digital",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
