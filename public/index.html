@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Screenly - Bienestar Digital & Control de Tiempo de Uso</title>
-  <meta name="description" content="Screenly: Aplicación móvil Android en Kotlin y Jetpack Compose para el monitoreo, control y gestión inteligente del tiempo de uso de aplicaciones." />
+  <title>Screenly - Bienestar Digital y Control de Tiempo de Uso</title>
+  <meta name="description" content="Screenly: Aplicación Android en Kotlin y Jetpack Compose con versión Web completa para monitoreo, límites de tiempo, calendario interactivo y estadísticas de bienestar digital." />
   <meta name="theme-color" content="#2563EB" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%232563EB%22/><path d=%22M50 25 v25 l18 10%22 stroke=%22white%22 stroke-width=%228%22 stroke-linecap=%22round%22 fill=%22none%22/><circle cx=%2250%22 cy=%2250%22 r=%226%22 fill=%22white%22/></svg>" />
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,15 +29,19 @@
       --border: #E2E8F0;
       --border-focus: #93C5FD;
       --danger: #EF4444;
+      --danger-bg: #FEE2E2;
       --warning: #F59E0B;
+      --warning-bg: #FEF3C7;
       --success: #10B981;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
-      --shadow-lg: 0 10px 30px rgba(37, 99, 235, 0.12);
+      --success-bg: #DCFCE7;
+      --info: #3B82F6;
+      --info-bg: #DBEAFE;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 12px 32px rgba(37, 99, 235, 0.14);
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
-      --radius-xl: 32px;
     }
 
     * {
@@ -77,13 +81,14 @@
       gap: 12px;
       text-decoration: none;
       color: inherit;
+      cursor: pointer;
     }
 
     .brand-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary) 0%, #3B82F6 100%);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--primary) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,25 +144,62 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .pill-badge {
-      display: inline-flex;
+    .header-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: var(--primary-subtle);
-      color: var(--primary-dark);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid var(--primary-light);
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-main);
+      position: relative;
+      transition: all 0.15s ease;
     }
 
-    .pill-dot {
-      width: 8px;
-      height: 8px;
+    .header-icon-btn:hover {
+      background: var(--primary-subtle);
+      color: var(--primary);
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: var(--danger);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+    }
+
+    /* System Android Environment Notice */
+    .android-notice-bar {
+      background: #EFF6FF;
+      border-bottom: 1px solid #BFDBFE;
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: #1E40AF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .android-notice-bar a {
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
     }
 
     /* Main Container */
@@ -166,40 +208,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 16px 40px;
-    }
-
-    /* Presentation Banner */
-    .hero-banner {
-      max-width: 960px;
-      width: 100%;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .hero-tag {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 6px;
-    }
-
-    .hero-heading {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-
-    .hero-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      max-width: 620px;
-      margin: 0 auto;
-      line-height: 1.5;
+      padding: 20px 16px 40px;
     }
 
     /* Device Mockup Shell (Mobile View) */
@@ -212,8 +221,8 @@
 
     .device-phone {
       width: 100%;
-      max-width: 412px;
-      min-height: 840px;
+      max-width: 420px;
+      min-height: 860px;
       background: #FFFFFF;
       border-radius: 40px;
       box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.18), 0 0 0 12px #0F172A, 0 0 0 14px #E2E8F0;
@@ -225,7 +234,7 @@
 
     /* Full Desktop View Mode */
     .device-wrapper.mode-desktop .device-phone {
-      max-width: 920px;
+      max-width: 960px;
       min-height: auto;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-md);
@@ -264,9 +273,9 @@
       z-index: 30;
     }
 
-    /* App Header inside Mockup */
+    /* App Screen Header */
     .screen-header {
-      padding: 14px 20px;
+      padding: 12px 20px;
       background: #FFFFFF;
       display: flex;
       align-items: center;
@@ -287,24 +296,6 @@
       font-weight: 500;
     }
 
-    .header-action-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--surface-muted);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--primary);
-      transition: background 0.15s ease;
-    }
-
-    .header-action-btn:hover {
-      background: var(--primary-subtle);
-    }
-
     /* Screen View Container */
     .screen-viewport {
       flex: 1;
@@ -313,13 +304,18 @@
       background: #FFFFFF;
     }
 
-    /* Screen Tab Content Panels */
-    .screen-tab-panel {
-      display: none;
-      animation: fadeIn 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Sub-screen viewport does not need bottom padding for bottom-nav */
+    .screen-viewport.no-bottom-nav {
+      padding-bottom: 24px;
     }
 
-    .screen-tab-panel.active {
+    /* Screen Views */
+    .view-screen {
+      display: none;
+      animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .view-screen.active {
       display: block;
     }
 
@@ -339,10 +335,6 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .sc-card:hover {
-      border-color: var(--border-focus);
-    }
-
     .sc-card-hero {
       background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
       color: white;
@@ -352,19 +344,6 @@
       overflow: hidden;
     }
 
-    .sc-card-hero::after {
-      content: '';
-      position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      pointer-events: none;
-    }
-
-    /* Dashboard Widgets */
     .hero-time-value {
       font-size: 2.3rem;
       font-weight: 800;
@@ -375,7 +354,7 @@
 
     .hero-meta {
       font-size: 0.85rem;
-      opacity: 0.92;
+      opacity: 0.95;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -430,7 +409,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 20px 0 12px;
+      margin: 18px 0 12px;
     }
 
     .section-head h2 {
@@ -451,7 +430,7 @@
       cursor: pointer;
     }
 
-    /* App Usage List Item */
+    /* App Item Row */
     .app-item {
       display: flex;
       align-items: center;
@@ -460,24 +439,27 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       margin-bottom: 8px;
-      transition: transform 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
+      transition: all 0.15s ease;
     }
 
     .app-item:hover {
-      border-color: var(--border-focus);
+      border-color: var(--primary);
       transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
     }
 
     .app-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       margin-right: 12px;
       flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
     }
 
     .app-details {
@@ -526,7 +508,8 @@
       font-size: 0.7rem;
       color: var(--text-light);
       margin-top: 4px;
-      display: block;
+      display: flex;
+      justify-content: space-between;
     }
 
     /* Interactive Calendar Widget */
@@ -563,7 +546,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
@@ -696,7 +679,7 @@
       border-radius: 6px;
     }
 
-    /* Limits Management Tab */
+    /* Limits Card & Status Badges */
     .limit-card {
       background: #FFFFFF;
       border: 1px solid var(--border);
@@ -713,28 +696,55 @@
       margin-bottom: 8px;
     }
 
-    .limit-badge {
+    .limit-status-badge {
       display: inline-block;
       font-size: 0.7rem;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-left: 6px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
-    .limit-badge.alcanzado {
-      background: #FEE2E2;
+    .badge-vigente { background: var(--success-bg); color: #047857; }
+    .badge-proximo { background: var(--warning-bg); color: #B45309; }
+    .badge-alcanzado { background: var(--danger-bg); color: #B91C1C; }
+    .badge-programado { background: var(--info-bg); color: #1D4ED8; }
+    .badge-finalizado { background: #E2E8F0; color: #475569; }
+    .badge-inactivo { background: #F1F5F9; color: #94A3B8; }
+
+    .limit-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--surface-muted);
+    }
+
+    .btn-action-small {
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-action-small:hover {
+      background: var(--primary-subtle);
+      color: var(--primary);
+    }
+
+    .btn-action-small.delete:hover {
+      background: var(--danger-bg);
       color: var(--danger);
-    }
-
-    .limit-badge.proximo {
-      background: #FEF3C7;
-      color: var(--warning);
-    }
-
-    .limit-badge.vigente {
-      background: #DCFCE7;
-      color: var(--success);
+      border-color: #FCA5A5;
     }
 
     /* Toggle Switch */
@@ -743,6 +753,7 @@
       display: inline-block;
       width: 44px;
       height: 24px;
+      flex-shrink: 0;
     }
 
     .switch input {
@@ -784,15 +795,252 @@
       transform: translateX(20px);
     }
 
-    /* Stats Tab - Bar Chart */
-    .chart-card {
+    /* Fixed Bottom Navigation inside Phone Frame */
+    .phone-bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px 14px;
+      z-index: 40;
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 4px 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+      gap: 3px;
+    }
+
+    .nav-tab-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+      stroke: currentColor;
+      fill: none;
+      transition: transform 0.15s ease;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-tab-btn.active svg {
+      transform: scale(1.1);
+      stroke: var(--primary);
+    }
+
+    /* Forms and Inputs */
+    .form-group {
       margin-bottom: 16px;
     }
 
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .form-error {
+      color: var(--danger);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .form-error.visible {
+      display: block;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+      transition: background 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: var(--surface-muted);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: #E2E8F0;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      max-width: 420px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      animation: modalSlide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalSlide {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Bottom Sheet Drawer on Mobile */
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(3px);
+      z-index: 90;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .drawer-backdrop.open {
+      display: flex;
+    }
+
+    .drawer-sheet {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.15);
+      animation: drawerUp 0.25s ease-out;
+    }
+
+    @keyframes drawerUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    /* Toast Notification */
+    .toast-snackbar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0F172A;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 120;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast-snackbar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Bar Chart in Stats */
     .bar-chart {
       display: flex;
       align-items: flex-end;
@@ -849,134 +1097,27 @@
       margin-top: 8px;
     }
 
-    /* Fixed Bottom Navigation inside Phone Frame */
-    .phone-bottom-nav {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #FFFFFF;
-      border-top: 1px solid var(--border);
+    /* Subscreen Back Header */
+    .subscreen-nav-bar {
       display: flex;
-      justify-content: space-around;
-      padding: 8px 12px 14px;
-      z-index: 40;
-    }
-
-    .nav-tab-btn {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      padding: 4px 0;
-      font-size: 0.72rem;
-      font-weight: 600;
-      transition: color 0.15s ease;
-      gap: 3px;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--surface-muted);
     }
 
-    .nav-tab-btn svg {
-      width: 22px;
-      height: 22px;
-      stroke-width: 2.2;
-      stroke: currentColor;
-      fill: none;
-      transition: transform 0.15s ease;
-    }
-
-    .nav-tab-btn.active {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .nav-tab-btn.active svg {
-      transform: scale(1.1);
-      stroke: var(--primary);
-    }
-
-    /* Modal Backdrop */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(4px);
-      z-index: 100;
+    .subscreen-back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-sheet {
-      background: #FFFFFF;
-      border-radius: var(--radius-lg);
-      max-width: 400px;
-      width: 100%;
-      padding: 24px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-      animation: modalSlide 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes modalSlide {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.88rem;
       cursor: pointer;
-      width: 100%;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
-      transition: background 0.15s ease;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    /* Footer info */
-    .footer-bar {
-      margin-top: 32px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-light);
-    }
-
-    .footer-bar a {
       color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
     }
   </style>
 </head>
@@ -984,7 +1125,7 @@
 
   <!-- Top Navbar -->
   <header class="top-navbar">
-    <a href="#" class="brand-wrap">
+    <div class="brand-wrap" onclick="navigateTo('inicio')">
       <div class="brand-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -993,42 +1134,55 @@
       </div>
       <div>
         <div class="brand-title">Screenly</div>
-        <div class="brand-subtitle">Bienestar Digital Móvil • Kotlin + Compose</div>
+        <div class="brand-subtitle">Bienestar Digital Android • Versión Web Completa</div>
       </div>
-    </a>
+    </div>
 
     <div class="navbar-actions">
-      <span class="pill-badge">
-        <span class="pill-dot"></span>
-        Vercel Online
-      </span>
+      <!-- Simulator / Scenario button -->
+      <button class="header-icon-btn" title="Simulador Android & Escenarios" onclick="openDrawer('simulator')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </button>
+
+      <!-- Alerts Center button -->
+      <button class="header-icon-btn" title="Centro de Alertas" onclick="openDrawer('alerts')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="badge-count" id="header-unread-count" style="display:none;">0</span>
+      </button>
+
+      <!-- View layout toggle -->
       <div class="view-toggle">
         <button class="view-toggle-btn active" id="btn-mode-mobile" onclick="setDeviceView('mobile')">
           📱 Móvil
         </button>
         <button class="view-toggle-btn" id="btn-mode-desktop" onclick="setDeviceView('desktop')">
-          💻 Completo
+          💻 Pantalla
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Presentation Area -->
-  <main class="app-main">
-    <div class="hero-banner">
-      <div class="hero-tag">Android Native • Jetpack Compose • M3</div>
-      <h1 class="hero-heading">Control y Bienestar Digital Inteligente</h1>
-      <p class="hero-desc">
-        Interfaz en diseño blanco con acentos azules. Explora los 4 módulos funcionales: Inicio, Uso de aplicaciones con Calendario interactivo, Límites configurables y Estadísticas semanales.
-      </p>
-    </div>
+  <!-- Clear Android vs Web Explanation Notice -->
+  <div class="android-notice-bar">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+    <span><strong>Entorno Web (Vercel):</strong> Persistencia activa con <code>localStorage</code>. En Android físico, la lectura depende de <code>UsageStatsManager</code>.</span>
+    <a onclick="openDrawer('simulator')">Ver detalles técnicos</a>
+  </div>
 
-    <!-- Phone Device Mockup Container -->
+  <!-- Main Container -->
+  <main class="app-main">
     <div class="device-wrapper" id="device-wrapper">
       <div class="device-phone">
         <div class="phone-notch"></div>
         <div class="phone-status-bar">
-          <span id="live-time">09:41</span>
+          <span id="live-time">10:00</span>
           <div style="display: flex; gap: 6px; align-items: center;">
             <span>5G</span>
             <span>100%</span>
@@ -1036,35 +1190,93 @@
         </div>
 
         <!-- App Screen Header -->
-        <div class="screen-header">
+        <div class="screen-header" id="main-screen-header">
           <div class="screen-title-group">
             <h1 id="screen-title">Screenly</h1>
             <p id="screen-subtitle">Panel de Bienestar Digital</p>
           </div>
-          <button class="header-action-btn" title="Información" onclick="openInfoModal()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
+          <button class="header-icon-btn" title="Simulador y Opciones" onclick="openDrawer('simulator')">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
           </button>
         </div>
 
-        <!-- Screen Content Viewport -->
-        <div class="screen-viewport">
+        <!-- Viewport Container -->
+        <div class="screen-viewport" id="screen-viewport">
 
-          <!-- TAB 1: INICIO (Dashboard) -->
-          <div class="screen-tab-panel active" id="tab-inicio">
+          <!-- SCREEN: ONBOARDING / PERMISOS -->
+          <div class="view-screen" id="screen-onboarding">
+            <div style="text-align: center; padding: 10px 0 20px;">
+              <div class="brand-icon" style="width: 70px; height: 70px; border-radius: 20px; margin: 0 auto 16px;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              </div>
+              <h2 style="font-size: 1.45rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Bienvenido a Screenly</h2>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">Monitorea tu uso diario, establece límites saludables y toma el control consciente de tu tiempo digital.</p>
+            </div>
+
+            <!-- Permission Card 1: Usage Stats -->
+            <div class="sc-card" style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary-subtle); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    📊
+                  </div>
+                  <div>
+                    <h3 style="font-size: 0.9rem; font-weight: 700;">Acceso a datos de uso</h3>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">android.permission.PACKAGE_USAGE_STATS</span>
+                  </div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="onboarding-perm-usage" checked onchange="togglePermissionState('usage', this.checked)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+                Permite a Screenly consultar las estadísticas del sistema para medir el tiempo real en cada aplicación.
+              </p>
+              <div style="background: var(--surface-muted); padding: 8px 10px; border-radius: 8px; margin-top: 8px; font-size: 0.72rem; color: var(--text-muted);">
+                ⚡ <em>En la versión Web este permiso se simula con el repositorio local de datos.</em>
+              </div>
+            </div>
+
+            <!-- Permission Card 2: Notifications -->
+            <div class="sc-card" style="margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--warning-bg); display: flex; align-items: center; justify-content: center; color: var(--warning);">
+                    🔔
+                  </div>
+                  <div>
+                    <h3 style="font-size: 0.9rem; font-weight: 700;">Notificaciones y Alertas</h3>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">android.permission.POST_NOTIFICATIONS</span>
+                  </div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="onboarding-perm-notif" checked onchange="togglePermissionState('notif', this.checked)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+                Avisa cuando una aplicación alcanza el 80% o el 100% de su límite diario programado.
+              </p>
+            </div>
+
+            <button class="btn-primary" onclick="completeOnboarding()">
+              Continuar al Dashboard →
+            </button>
+          </div>
+
+          <!-- SCREEN: INICIO (Dashboard) -->
+          <div class="view-screen" id="screen-inicio">
             <!-- Hero Time Card -->
             <div class="sc-card sc-card-hero">
-              <span style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.9;">Tiempo total hoy</span>
-              <div class="hero-time-value" id="dash-total-time">4h 32min</div>
+              <span style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.95;">Tiempo total hoy</span>
+              <div class="hero-time-value" id="dash-total-time">0h 00min</div>
               <div class="progress-bar-wrap">
-                <div class="progress-bar-fill" style="width: 82%;"></div>
+                <div class="progress-bar-fill" id="dash-progress-fill" style="width: 75%;"></div>
               </div>
               <div class="hero-meta">
-                <span>Meta diaria: 5h 30min</span>
-                <span>82% alcanzado</span>
+                <span id="dash-meta-label">Meta diaria: 5h 30min</span>
+                <span id="dash-meta-pct">75% alcanzado</span>
               </div>
             </div>
 
@@ -1072,28 +1284,20 @@
             <div class="stats-3col">
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Productivo</div>
-                <div class="stat-mini-val" style="color: var(--primary);">1h 45m</div>
+                <div class="stat-mini-val" id="dash-stat-prod" style="color: var(--primary);">0m</div>
               </div>
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Ocio/Redes</div>
-                <div class="stat-mini-val" style="color: #6366F1;">2h 47m</div>
+                <div class="stat-mini-val" id="dash-stat-ocio" style="color: #6366F1;">0m</div>
               </div>
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Desbloqueos</div>
-                <div class="stat-mini-val" style="color: var(--text-main);">48</div>
+                <div class="stat-mini-val" id="dash-stat-unlocks">48</div>
               </div>
             </div>
 
-            <!-- Active Wellbeing Alert -->
-            <div class="sc-card" style="border-left: 4px solid var(--warning); padding: 14px 16px;">
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <span style="font-size: 1.2rem;">⚠️</span>
-                <div>
-                  <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-main);">Límite próximo: Instagram</div>
-                  <div style="font-size: 0.76rem; color: var(--text-muted);">Has consumido 58 de los 60 minutos asignados hoy.</div>
-                </div>
-              </div>
-            </div>
+            <!-- Urgent Wellbeing Banner (if any limit reached) -->
+            <div id="dash-alert-banner" style="display:none; margin-bottom: 16px;"></div>
 
             <!-- Top Apps List -->
             <div class="section-head">
@@ -1101,26 +1305,38 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 Aplicaciones más usadas
               </h2>
-              <button onclick="switchTab('uso')">Ver todas</button>
+              <button onclick="navigateTo('uso')">Ver todo</button>
             </div>
 
-            <div id="top-apps-container">
+            <div id="dash-top-apps-list">
               <!-- Dynamically populated -->
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div class="section-head" style="margin-top: 14px;">
+              <h2>Acciones rápidas</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <button class="btn-secondary" onclick="navigateTo('crear-limite')">
+                + Crear límite
+              </button>
+              <button class="btn-secondary" onclick="navigateTo('estadisticas')">
+                📈 Estadísticas
+              </button>
             </div>
           </div>
 
-          <!-- TAB 2: USO DE APPS CON CALENDARIO INTERACTIVO -->
-          <div class="screen-tab-panel" id="tab-uso">
-            <!-- Calendar Toggle Button -->
+          <!-- SCREEN: USO DE APLICACIONES CON CALENDARIO -->
+          <div class="view-screen" id="screen-uso">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <button class="cal-chip active" id="btn-toggle-cal" onclick="toggleCalendar()" style="display: flex; align-items: center; gap: 6px;">
+              <button class="cal-chip active" id="btn-toggle-cal" onclick="toggleCalendarWidget()" style="display: flex; align-items: center; gap: 6px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 <span id="lbl-toggle-cal">Ocultar calendario</span>
               </button>
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;" id="filter-summary-pill">Filtrado por: Hoy</span>
+              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;" id="filter-summary-pill">Hoy</span>
             </div>
 
-            <!-- Collapsible Interactive Calendar -->
+            <!-- Collapsible Calendar -->
             <div class="cal-wrapper" id="calendar-widget">
               <!-- Month Navigator -->
               <div class="cal-header-row">
@@ -1143,22 +1359,22 @@
                 <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
               </div>
 
-              <!-- Calendar Days Grid -->
+              <!-- Days Grid -->
               <div class="cal-grid" id="calendar-days-grid">
                 <!-- Injected via JavaScript -->
               </div>
 
-              <!-- Status bar matching Android InteractiveCalendarView -->
+              <!-- Status bar -->
               <div class="cal-status-bar">
-                <span id="cal-status-text">Consultando hoy: 24 de Octubre de 2026</span>
+                <span id="cal-status-text">Consultando hoy</span>
                 <span class="cal-status-badge" id="cal-mode-badge">Día</span>
               </div>
             </div>
 
-            <!-- List of Apps used on selected date -->
+            <!-- Usage List Detail -->
             <div class="section-head">
               <h2>Detalle de uso por aplicación</h2>
-              <span id="total-apps-count" style="font-size: 0.78rem; color: var(--text-muted);">6 aplicaciones</span>
+              <span id="total-usage-time-label" style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">0h 00m</span>
             </div>
 
             <div id="usage-apps-list">
@@ -1166,11 +1382,11 @@
             </div>
           </div>
 
-          <!-- TAB 3: LÍMITES DE TIEMPO -->
-          <div class="screen-tab-panel" id="tab-limites">
+          <!-- SCREEN: LÍMITES DIARIOS -->
+          <div class="view-screen" id="screen-limites">
             <div class="section-head" style="margin-top: 0;">
-              <h2>Límites diarios configurados</h2>
-              <button onclick="openNewLimitModal()" style="color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+              <h2>Límites configurados</h2>
+              <button onclick="navigateTo('crear-limite')" style="color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 4px;">
                 + Añadir límite
               </button>
             </div>
@@ -1178,238 +1394,1426 @@
             <div class="stats-3col" style="margin-bottom: 14px;">
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Activos</div>
-                <div class="stat-mini-val" id="stat-lim-activos" style="color: var(--primary);">4</div>
+                <div class="stat-mini-val" id="stat-lim-activos" style="color: var(--primary);">0</div>
               </div>
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Alcanzados</div>
-                <div class="stat-mini-val" id="stat-lim-alcanzados" style="color: var(--danger);">1</div>
+                <div class="stat-mini-val" id="stat-lim-alcanzados" style="color: var(--danger);">0</div>
               </div>
               <div class="stat-mini-card">
                 <div class="stat-mini-lbl">Próximos</div>
-                <div class="stat-mini-val" id="stat-lim-proximos" style="color: var(--warning);">1</div>
+                <div class="stat-mini-val" id="stat-lim-proximos" style="color: var(--warning);">0</div>
               </div>
             </div>
 
             <div id="limits-container">
-              <!-- Dynamic Limits -->
+              <!-- Dynamically populated limits -->
             </div>
 
-            <button class="btn-primary" style="margin-top: 8px;" onclick="openNewLimitModal()">
+            <button class="btn-primary" style="margin-top: 8px;" onclick="navigateTo('crear-limite')">
               + Configurar Nuevo Límite
             </button>
           </div>
 
-          <!-- TAB 4: ESTADÍSTICAS -->
-          <div class="screen-tab-panel" id="tab-estadisticas">
-            <!-- Weekly Reduction Metric -->
+          <!-- SCREEN: ESTADÍSTICAS -->
+          <div class="view-screen" id="screen-estadisticas">
+            <!-- Filter Controls -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+              <div>
+                <label class="form-label">Aplicación</label>
+                <select class="form-control" id="stats-app-filter" onchange="renderStatsScreen()">
+                  <option value="ALL">Todas las aplicaciones</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">Periodo</label>
+                <select class="form-control" id="stats-period-filter" onchange="renderStatsScreen()">
+                  <option value="LAST_7_DAYS">Últimos 7 días</option>
+                  <option value="TODAY">Hoy</option>
+                  <option value="MONTH">Mes actual</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Wellbeing Metric Card -->
             <div class="sc-card" style="background: var(--primary-subtle); border-color: var(--border-focus); margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <div style="font-size: 0.78rem; font-weight: 600; color: var(--primary-dark);">Comparativa semanal</div>
-                  <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary); margin: 4px 0;">-18% tiempo de uso</div>
-                  <div style="font-size: 0.75rem; color: var(--text-muted);">Redujiste 45 min diarios en redes sociales</div>
+                  <div style="font-size: 0.78rem; font-weight: 600; color: var(--primary-dark);">Comparativa de bienestar</div>
+                  <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary); margin: 4px 0;" id="stats-reduction-label">-18% de uso</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);" id="stats-sub-insight">Reducción consciente respecto al periodo anterior</div>
                 </div>
-                <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: var(--shadow-sm);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: var(--shadow-sm);">
                   📉
                 </div>
               </div>
             </div>
 
-            <!-- Weekly 7-Day Bar Chart -->
-            <div class="chart-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3 style="font-size: 0.9rem; font-weight: 700;">Uso diario (Últimos 7 días)</h3>
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Promedio: 4h 15m</span>
+            <!-- 7-Day Bar Chart -->
+            <div class="sc-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="font-size: 0.9rem; font-weight: 700;">Uso diario</h3>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" id="stats-avg-label">Promedio: 0m</span>
               </div>
-              <div class="bar-chart" id="weekly-bar-chart">
+              <div class="bar-chart" id="stats-bar-chart">
                 <!-- Bar columns generated by JS -->
               </div>
             </div>
 
-            <!-- Categories Breakdown -->
+            <!-- Category Breakdown -->
             <div class="sc-card">
               <h3 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 14px;">Distribución por Categorías</h3>
+              <div id="stats-categories-list"></div>
+            </div>
+          </div>
 
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
-                  <span>Redes Sociales</span>
-                  <span>52% (2h 21m)</span>
-                </div>
-                <div class="app-bar-wrap"><div class="app-bar-fill" style="width: 52%; background: #3B82F6;"></div></div>
-              </div>
-
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
-                  <span>Productividad & Trabajo</span>
-                  <span>24% (1h 05m)</span>
-                </div>
-                <div class="app-bar-wrap"><div class="app-bar-fill" style="width: 24%; background: #10B981;"></div></div>
-              </div>
-
-              <div style="margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
-                  <span>Entretenimiento & Videos</span>
-                  <span>16% (43m)</span>
-                </div>
-                <div class="app-bar-wrap"><div class="app-bar-fill" style="width: 16%; background: #F59E0B;"></div></div>
-              </div>
-
+          <!-- SCREEN: CREAR O EDITAR LÍMITE (Form) -->
+          <div class="view-screen" id="screen-add-edit-limit">
+            <div class="subscreen-nav-bar">
+              <button class="subscreen-back-btn" onclick="navigateTo('limites')">←</button>
               <div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
-                  <span>Otras Aplicaciones</span>
-                  <span>8% (23m)</span>
-                </div>
-                <div class="app-bar-wrap"><div class="app-bar-fill" style="width: 8%; background: #94A3B8;"></div></div>
+                <h2 style="font-size: 1.1rem; font-weight: 800;" id="form-limit-title">Configurar Límite</h2>
+                <p style="font-size: 0.75rem; color: var(--text-muted);" id="form-limit-subtitle">Define el tiempo diario máximo permitido</p>
               </div>
+            </div>
+
+            <form id="limit-form" onsubmit="handleLimitFormSubmit(event)">
+              <input type="hidden" id="form-limit-id" value="" />
+
+              <!-- App selector -->
+              <div class="form-group">
+                <label class="form-label">Aplicación <span style="color:var(--danger)">*</span></label>
+                <select class="form-control" id="form-app-select">
+                  <!-- Injected via JS -->
+                </select>
+                <div class="form-error" id="err-app">Debes seleccionar una aplicación</div>
+              </div>
+
+              <!-- Hours and Minutes -->
+              <div class="form-group">
+                <label class="form-label">Tiempo límite diario <span style="color:var(--danger)">*</span></label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div>
+                    <input type="number" class="form-control" id="form-hours" min="0" max="23" value="1" placeholder="Horas" />
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">Horas (0-23)</span>
+                  </div>
+                  <div>
+                    <input type="number" class="form-control" id="form-minutes" min="0" max="59" value="30" placeholder="Minutos" />
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">Minutos (0-59)</span>
+                  </div>
+                </div>
+                <div class="form-error" id="err-time">El límite debe ser mayor a 0 minutos y menor a 24 horas</div>
+              </div>
+
+              <!-- Active Toggle -->
+              <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--surface-variant); border-radius: 10px;">
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 700;">Límite activo</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">Aplica el límite de inmediato</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="form-active-switch" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <!-- Validity Period (Optional) -->
+              <div class="form-group" style="padding: 14px; border: 1px solid var(--border); border-radius: 12px; margin-top: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <div>
+                    <div style="font-size: 0.85rem; font-weight: 700;">Periodo de vigencia (Opcional)</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">El límite solo regirá entre dos fechas</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="form-has-validity" onchange="toggleValidityFields(this.checked)" />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div id="form-validity-dates" style="display:none; margin-top: 10px;">
+                  <div style="margin-bottom: 8px;">
+                    <label class="form-label" style="font-size:0.75rem;">Fecha de inicio</label>
+                    <input type="date" class="form-control" id="form-start-date" />
+                  </div>
+                  <div>
+                    <label class="form-label" style="font-size:0.75rem;">Fecha de fin</label>
+                    <input type="date" class="form-control" id="form-end-date" />
+                  </div>
+                  <div class="form-error" id="err-validity">La fecha de finalización debe ser posterior o igual a la de inicio</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <button type="submit" class="btn-primary" id="btn-save-limit">
+                  Guardar límite
+                </button>
+                <button type="button" class="btn-secondary" onclick="navigateTo('limites')">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- SCREEN: DETALLE DE APLICACIÓN -->
+          <div class="view-screen" id="screen-app-detail">
+            <div class="subscreen-nav-bar">
+              <button class="subscreen-back-btn" onclick="navigateTo('uso')">←</button>
+              <h2 style="font-size: 1.1rem; font-weight: 800;">Detalle de aplicación</h2>
+            </div>
+
+            <!-- App Profile Card -->
+            <div style="text-align: center; padding: 12px 0 20px;">
+              <div class="app-avatar" id="detail-app-avatar" style="width: 68px; height: 68px; font-size: 2.2rem; border-radius: 18px; margin: 0 auto 12px;"></div>
+              <h2 style="font-size: 1.35rem; font-weight: 800;" id="detail-app-name">Instagram</h2>
+              <p style="font-size: 0.78rem; color: var(--text-muted);" id="detail-app-meta">Redes sociales • com.instagram.android</p>
+            </div>
+
+            <!-- Usage Today Card -->
+            <div class="sc-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Tiempo de uso hoy</span>
+                <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);" id="detail-time-today">0m</span>
+              </div>
+              <div class="app-bar-wrap" style="height: 8px; margin-bottom: 12px;">
+                <div class="app-bar-fill" id="detail-progress-fill" style="width: 50%;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted);">
+                <span>Lanzamientos hoy: <strong id="detail-launches-count" style="color:var(--text-main)">12</strong></span>
+                <span id="detail-daily-share-pct">18% del tiempo total</span>
+              </div>
+            </div>
+
+            <!-- Configured Limit Card -->
+            <div class="sc-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="font-size: 0.9rem; font-weight: 700;">Límite asignado</h3>
+                <span class="limit-status-badge" id="detail-limit-badge">Sin límite</span>
+              </div>
+              <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;" id="detail-limit-desc">
+                No hay un límite de tiempo configurado para esta aplicación.
+              </p>
+            </div>
+
+            <!-- Detail Action Buttons -->
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+              <button class="btn-primary" id="btn-detail-config-limit" onclick="handleDetailConfigLimit()">
+                Configurar límite
+              </button>
+              <button class="btn-secondary" onclick="handleDetailViewStats()">
+                📈 Ver en estadísticas
+              </button>
             </div>
           </div>
 
         </div>
 
         <!-- Phone Fixed Bottom Bar Navigation -->
-        <nav class="phone-bottom-nav">
-          <button class="nav-tab-btn active" id="nav-btn-inicio" onclick="switchTab('inicio')">
+        <nav class="phone-bottom-nav" id="main-bottom-nav">
+          <button class="nav-tab-btn active" id="nav-btn-inicio" onclick="navigateTo('inicio')">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             <span>Inicio</span>
           </button>
-          <button class="nav-tab-btn" id="nav-btn-uso" onclick="switchTab('uso')">
+          <button class="nav-tab-btn" id="nav-btn-uso" onclick="navigateTo('uso')">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             <span>Uso</span>
           </button>
-          <button class="nav-tab-btn" id="nav-btn-limites" onclick="switchTab('limites')">
+          <button class="nav-tab-btn" id="nav-btn-limites" onclick="navigateTo('limites')">
             <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             <span>Límites</span>
           </button>
-          <button class="nav-tab-btn" id="nav-btn-estadisticas" onclick="switchTab('estadisticas')">
+          <button class="nav-tab-btn" id="nav-btn-estadisticas" onclick="navigateTo('estadisticas')">
             <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
             <span>Estadísticas</span>
           </button>
         </nav>
       </div>
     </div>
-
-    <!-- Presentation Footer info -->
-    <div class="footer-bar">
-      Screenly v1.1 • Proyecto Android en Kotlin & Jetpack Compose • Desplegado en Vercel
-    </div>
   </main>
 
-  <!-- Modal: Crear Límite -->
-  <div class="modal-backdrop" id="modal-new-limit">
-    <div class="modal-sheet">
-      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Nuevo Límite de Uso</h3>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Selecciona la aplicación y el tiempo máximo permitido al día.</p>
-
-      <div style="margin-bottom: 14px;">
-        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Aplicación</label>
-        <select id="modal-app-select" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 0.88rem;">
-          <option value="Spotify">Spotify</option>
-          <option value="Twitter / X">Twitter / X</option>
-          <option value="Netflix">Netflix</option>
-          <option value="Reddit">Reddit</option>
-          <option value="Discord">Discord</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom: 18px;">
-        <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Tiempo límite diario</label>
-        <div style="display: flex; gap: 10px;">
-          <select id="modal-hours-select" style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit;">
-            <option value="0">0 horas</option>
-            <option value="1" selected>1 hora</option>
-            <option value="2">2 horas</option>
-            <option value="3">3 horas</option>
-          </select>
-          <select id="modal-mins-select" style="flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit;">
-            <option value="0">00 min</option>
-            <option value="15">15 min</option>
-            <option value="30" selected>30 min</option>
-            <option value="45">45 min</option>
-          </select>
+  <!-- DRAWER: ALERTS CENTER (AlertsBottomSheet) -->
+  <div class="drawer-backdrop" id="drawer-alerts" onclick="if(event.target===this) closeDrawer('alerts')">
+    <div class="drawer-sheet">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">Centro de Alertas</h3>
+          <span class="badge-count" id="alerts-unread-badge" style="position: static;">0</span>
         </div>
+        <button class="btn-action-small" onclick="clearAllAlerts()">Borrar todas</button>
       </div>
-
-      <button class="btn-primary" onclick="saveNewLimit()">Guardar límite</button>
-      <button class="btn-outline" onclick="closeNewLimitModal()">Cancelar</button>
+      <div id="alerts-list-container">
+        <!-- Injected via JS -->
+      </div>
+      <button class="btn-secondary" style="margin-top: 14px;" onclick="closeDrawer('alerts')">Cerrar</button>
     </div>
   </div>
 
-  <!-- Modal: Info Arquitectura -->
-  <div class="modal-backdrop" id="modal-info">
-    <div class="modal-sheet">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <div class="brand-icon" style="width: 32px; height: 32px; border-radius: 8px;">
-          📱
-        </div>
-        <div>
-          <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);">Screenly MVP</h3>
-          <p style="font-size: 0.75rem; color: var(--text-muted);">Arquitectura y Especificaciones</p>
-        </div>
+  <!-- DRAWER: SIMULADOR Y OPCIONES TÉCNICAS (SimulatorBottomSheet) -->
+  <div class="drawer-backdrop" id="drawer-simulator" onclick="if(event.target===this) closeDrawer('simulator')">
+    <div class="drawer-sheet">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-size: 1.15rem; font-weight: 800;">Simulador y Entorno Android</h3>
+        <button class="btn-action-small" onclick="closeDrawer('simulator')">✕</button>
       </div>
-      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
-        Aplicación nativa Android desarrollada en <strong>Kotlin</strong> y <strong>Jetpack Compose</strong> con Material Design 3. Incluye soporte para Android UsageStatsManager, cálculo de límites con reglas de negocio estrictas, persistencia de preferencias y tests en Robolectric.
-      </p>
-      <div style="background: var(--surface-muted); padding: 10px 14px; border-radius: 8px; font-size: 0.78rem; margin-bottom: 16px;">
-        <strong>Frameworks & Stack:</strong>
-        <ul style="margin-left: 18px; margin-top: 4px; color: var(--text-muted);">
-          <li>Android 14 (API 34)</li>
-          <li>Jetpack Compose M3 (Fondo blanco, acento azul)</li>
-          <li>Clean Architecture & Repository Pattern</li>
-          <li>Pruebas unitarias en JVM (Robolectric)</li>
-        </ul>
+
+      <div style="background: var(--surface-muted); padding: 12px; border-radius: 10px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+        <strong>Información de Arquitectura:</strong>
+        <p style="margin-top: 4px;">
+          <strong>En Android Nativo:</strong> Utiliza <code>UsageStatsManager</code> del sistema operativo para leer eventos de primer plano y un servicio en segundo plano con overlay para bloquear aplicaciones al 100%.
+        </p>
+        <p style="margin-top: 4px;">
+          <strong>En Navegador Web (Vercel):</strong> La API de hardware de Android no está presente en navegadores. Screenly opera con persistencia en <code>localStorage</code> para que todos tus límites, alertas y filtros se guarden de forma real.
+        </p>
       </div>
-      <button class="btn-primary" onclick="closeInfoModal()">Entendido</button>
+
+      <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px;">Simular eventos de bienestar</h4>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+        <button class="btn-secondary" onclick="simulateLimitReached('com.instagram.android')">
+          🚨 Simular 100% de límite (Instagram)
+        </button>
+        <button class="btn-secondary" onclick="simulateLimitReached('com.zhiliaoapp.musically')">
+          🚨 Simular 100% de límite (TikTok)
+        </button>
+      </div>
+
+      <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 8px;">Gestión de estado</h4>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-secondary" onclick="resetToInitialData()">
+          🔄 Restablecer datos iniciales de fábrica
+        </button>
+        <button class="btn-secondary" onclick="resetOnboarding()">
+          👋 Volver a pantalla de bienvenida (Onboarding)
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- MODAL: LIMIT REACHED DIALOG (LimitReachedDialog) -->
+  <div class="modal-backdrop" id="modal-limit-reached">
+    <div class="modal-sheet" style="text-align: center;">
+      <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--danger-bg); color: var(--danger); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 14px;">
+        🛑
+      </div>
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">¡Límite diario alcanzado!</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;" id="modal-limit-reached-desc">
+        Has completado el 100% del tiempo permitido hoy para esta aplicación.
+      </p>
+      <div style="background: var(--surface-muted); padding: 12px; border-radius: 10px; margin-bottom: 18px; font-size: 0.8rem; text-align: left;">
+        <p><strong>En Android:</strong> La aplicación entra en bloqueo estricto con pantalla de advertencia.</p>
+        <p style="margin-top: 4px; color: var(--text-muted);">Tómate un descanso consciente de la pantalla.</p>
+      </div>
+      <button class="btn-primary" onclick="closeLimitReachedModal()">
+        Entendido, cerrar app
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRM DELETE DIALOG (ConfirmDeleteDialog) -->
+  <div class="modal-backdrop" id="modal-confirm-delete">
+    <div class="modal-sheet">
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">¿Eliminar límite?</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;" id="modal-delete-desc">
+        Esta acción eliminará el límite configurado para la aplicación seleccionada.
+      </p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+        <button class="btn-danger" onclick="confirmDeleteLimit()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST SNACKBAR -->
+  <div class="toast-snackbar" id="toast-snackbar">
+    <span id="toast-msg">Mensaje</span>
   </div>
 
   <script>
-    // --- State and Mock Data ---
-    const allAppsData = [
-      { id: "insta", name: "Instagram", cat: "Redes Sociales", icon: "📸", bg: "#FCE7F3", timeMin: 58, limitMin: 60, active: true },
-      { id: "tiktok", name: "TikTok", cat: "Entretenimiento", icon: "🎵", bg: "#E0F2FE", timeMin: 45, limitMin: 45, active: true },
-      { id: "yt", name: "YouTube", cat: "Videos & Música", icon: "▶️", bg: "#FEE2E2", timeMin: 42, limitMin: 90, active: true },
-      { id: "wa", name: "WhatsApp", cat: "Mensajería", icon: "💬", bg: "#DCFCE7", timeMin: 67, limitMin: 120, active: true },
-      { id: "slack", name: "Slack", cat: "Productividad", icon: "💼", bg: "#FEF3C7", timeMin: 35, limitMin: 0, active: false },
-      { id: "chrome", name: "Google Chrome", cat: "Navegación", icon: "🌐", bg: "#EFF6FF", timeMin: 25, limitMin: 0, active: false }
+    /* ==========================================================================
+       SCREENLY WEB APPLICATION ENGINE - FULL KOTLIN/COMPOSE REPOSITORY EQUIVALENT
+       ========================================================================== */
+
+    // Initial 8 Apps definition matching ScreenlyDemoRepository.kt
+    const DEFAULT_APPS = [
+      { id: "com.instagram.android", packageName: "com.instagram.android", name: "Instagram", category: "Redes sociales", icon: "📸", bg: "#FCE7F3", primaryColor: "#E1306C" },
+      { id: "com.google.android.youtube", packageName: "com.google.android.youtube", name: "YouTube", category: "Entretenimiento", icon: "▶️", bg: "#FEE2E2", primaryColor: "#FF0000" },
+      { id: "com.zhiliaoapp.musically", packageName: "com.zhiliaoapp.musically", name: "TikTok", category: "Entretenimiento", icon: "🎵", bg: "#E0F2FE", primaryColor: "#00F2FE" },
+      { id: "com.whatsapp", packageName: "com.whatsapp", name: "WhatsApp", category: "Comunicación", icon: "💬", bg: "#DCFCE7", primaryColor: "#25D366" },
+      { id: "com.android.chrome", packageName: "com.android.chrome", name: "Google Chrome", category: "Navegación", icon: "🌐", bg: "#EFF6FF", primaryColor: "#4285F4" },
+      { id: "com.spotify.music", packageName: "com.spotify.music", name: "Spotify", category: "Música", icon: "🎧", bg: "#DCFCE7", primaryColor: "#1DB954" },
+      { id: "com.google.android.gm", packageName: "com.google.android.gm", name: "Gmail", category: "Productividad", icon: "✉️", bg: "#FEE2E2", primaryColor: "#EA4335" },
+      { id: "com.Slack", packageName: "com.Slack", name: "Slack", category: "Trabajo", icon: "💼", bg: "#FEF3C7", primaryColor: "#4A154B" }
     ];
 
-    let currentYear = 2026;
-    let currentMonth = 9; // 0-indexed: 9 = October
-    let selectedDay = 24;
-    let isMonthMode = false;
-    let calendarExpanded = true;
+    // Historical usage profile matching appHistoricalMinutes in Android repo:
+    // [today, yesterday, -2d, -3d, -4d, -5d, -6d]
+    const HISTORICAL_MINUTES = {
+      "com.instagram.android": [105, 95, 110, 80, 120, 90, 85],
+      "com.google.android.youtube": [70, 85, 90, 60, 110, 100, 75],
+      "com.zhiliaoapp.musically": [52, 45, 60, 50, 55, 65, 40],
+      "com.whatsapp": [48, 55, 40, 60, 45, 50, 35],
+      "com.android.chrome": [32, 25, 40, 30, 35, 20, 28],
+      "com.spotify.music": [25, 40, 30, 20, 35, 30, 15],
+      "com.google.android.gm": [18, 22, 15, 20, 25, 10, 15],
+      "com.Slack": [15, 30, 25, 35, 40, 20, 10]
+    };
 
-    const monthNames = [
+    // Initial Limits matching ScreenlyDemoRepository.kt
+    const DEFAULT_LIMITS = [
+      { id: "limit-instagram", appId: "com.instagram.android", dailyLimitMinutes: 90, isActive: true, hasValidityPeriod: true, startDate: "2026-10-20", endDate: "2026-11-15" },
+      { id: "limit-tiktok", appId: "com.zhiliaoapp.musically", dailyLimitMinutes: 60, isActive: true, hasValidityPeriod: false, startDate: null, endDate: null },
+      { id: "limit-youtube", appId: "com.google.android.youtube", dailyLimitMinutes: 120, isActive: true, hasValidityPeriod: true, startDate: "2026-10-22", endDate: "2026-11-10" },
+      { id: "limit-chrome", appId: "com.android.chrome", dailyLimitMinutes: 45, isActive: false, hasValidityPeriod: false, startDate: null, endDate: null },
+      { id: "limit-slack", appId: "com.Slack", dailyLimitMinutes: 30, isActive: true, hasValidityPeriod: true, startDate: "2026-11-10", endDate: "2026-11-25" }
+    ];
+
+    // Initial Alerts matching ScreenlyDemoRepository.kt
+    const DEFAULT_ALERTS = [
+      { id: "alert-1", appId: "com.instagram.android", appName: "Instagram", threshold: "REACHED_100", minutesUsed: 105, limitMinutes: 90, timestamp: "17:42", isRead: false },
+      { id: "alert-2", appId: "com.zhiliaoapp.musically", appName: "TikTok", threshold: "PROXIMITY_80", minutesUsed: 52, limitMinutes: 60, timestamp: "18:15", isRead: false }
+    ];
+
+    // LocalStorage Persistent Store
+    const Store = {
+      getApps: () => JSON.parse(localStorage.getItem('screenly_apps') || JSON.stringify(DEFAULT_APPS)),
+      getLimits: () => JSON.parse(localStorage.getItem('screenly_limits') || JSON.stringify(DEFAULT_LIMITS)),
+      setLimits: (limits) => localStorage.setItem('screenly_limits', JSON.stringify(limits)),
+      getAlerts: () => JSON.parse(localStorage.getItem('screenly_alerts') || JSON.stringify(DEFAULT_ALERTS)),
+      setAlerts: (alerts) => localStorage.setItem('screenly_alerts', JSON.stringify(alerts)),
+      getPrefs: () => JSON.parse(localStorage.getItem('screenly_prefs') || JSON.stringify({ hasCompletedOnboarding: true, usagePerm: true, notifPerm: true })),
+      setPrefs: (prefs) => localStorage.setItem('screenly_prefs', JSON.stringify(prefs))
+    };
+
+    // --- State Variables ---
+    let currentRoute = 'inicio';
+    let currentAppDetailId = null;
+    let limitToDeleteId = null;
+
+    // Calendar state
+    let calYear = 2026;
+    let calMonth = 9; // 9 = October (0-indexed)
+    let selectedDay = 24;
+    let isMonthFilter = false;
+    let calendarWidgetExpanded = true;
+
+    const MONTH_NAMES = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
-    // --- Tab Switching with History / Hash routing ---
-    function switchTab(tabId) {
-      document.querySelectorAll('.screen-tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+    // --- Time & Math Helpers ---
+    function formatMinutes(mins) {
+      if (!mins || mins <= 0) return "0 min";
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h > 0 && m > 0) return `${h}h ${m}min`;
+      if (h > 0) return `${h}h`;
+      return `${m}min`;
+    }
 
-      const targetPanel = document.getElementById(`tab-${tabId}`);
-      const targetBtn = document.getElementById(`nav-btn-${tabId}`);
-      if (targetPanel) targetPanel.classList.add('active');
-      if (targetBtn) targetBtn.classList.add('active');
+    // Calculate usage minutes for an app on a given date offset or day
+    function getAppMinutes(appId, offsetDays) {
+      const history = HISTORICAL_MINUTES[appId] || [10, 10, 10, 10, 10, 10, 10];
+      const safeOffset = Math.max(0, Math.min(6, offsetDays));
+      return history[safeOffset] || 0;
+    }
 
+    // Determine LimitStatusType exactly as in Kotlin AppLimit.kt
+    function calculateLimitStatus(limit, minutesUsed, date) {
+      if (!limit || !limit.isActive) {
+        return { type: 'INACTIVO', label: 'Inactivo', badgeClass: 'badge-inactivo' };
+      }
+
+      const todayStr = date || new Date().toISOString().split('T')[0];
+
+      if (limit.hasValidityPeriod) {
+        if (limit.startDate && todayStr < limit.startDate) {
+          return { type: 'PROGRAMADO', label: 'Programado', badgeClass: 'badge-programado' };
+        }
+        if (limit.endDate && todayStr > limit.endDate) {
+          return { type: 'FINALIZADO', label: 'Finalizado', badgeClass: 'badge-finalizado' };
+        }
+      }
+
+      const ratio = limit.dailyLimitMinutes > 0 ? (minutesUsed / limit.dailyLimitMinutes) : 0;
+      if (ratio >= 1.0) {
+        return { type: 'ALCANZADO', label: 'Alcanzado', badgeClass: 'badge-alcanzado' };
+      }
+      if (ratio >= 0.8) {
+        return { type: 'PROXIMO', label: 'Próximo (80%+)', badgeClass: 'badge-proximo' };
+      }
+      return { type: 'VIGENTE', label: 'Vigente', badgeClass: 'badge-vigente' };
+    }
+
+    // --- Navigation Router ---
+    function navigateTo(route, param = null) {
+      currentRoute = route;
+
+      const topLevelRoutes = ['inicio', 'uso', 'limites', 'estadisticas'];
+      const isTopLevel = topLevelRoutes.includes(route);
+
+      // Hide all screens
+      document.querySelectorAll('.view-screen').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+
+      const bottomNav = document.getElementById('main-bottom-nav');
+      const screenHeader = document.getElementById('main-screen-header');
+      const viewport = document.getElementById('screen-viewport');
+
+      if (isTopLevel) {
+        bottomNav.style.display = 'flex';
+        screenHeader.style.display = 'flex';
+        viewport.classList.remove('no-bottom-nav');
+        const activeTabBtn = document.getElementById(`nav-btn-${route}`);
+        if (activeTabBtn) activeTabBtn.classList.add('active');
+      } else {
+        bottomNav.style.display = 'none';
+        screenHeader.style.display = (route === 'onboarding') ? 'none' : 'none';
+        viewport.classList.add('no-bottom-nav');
+      }
+
+      // Title map for top-level headers
       const titleMap = {
         'inicio': { title: 'Screenly', sub: 'Panel de Bienestar Digital' },
-        'uso': { title: 'Uso de Apps', sub: 'Monitoreo por fecha y calendario' },
-        'limites': { title: 'Límites de Uso', sub: 'Configura alarmas y bloqueos' },
-        'estadisticas': { title: 'Estadísticas', sub: 'Resumen semanal y categorías' }
+        'uso': { title: 'Uso de aplicaciones', sub: 'Monitoreo por fecha y calendario' },
+        'limites': { title: 'Límites diarios', sub: 'Configura alarmas y bloqueos' },
+        'estadisticas': { title: 'Estadísticas', sub: 'Resumen semanal y comparativas' }
       };
 
-      if (titleMap[tabId]) {
-        document.getElementById('screen-title').textContent = titleMap[tabId].title;
-        document.getElementById('screen-subtitle').textContent = titleMap[tabId].sub;
+      if (titleMap[route]) {
+        document.getElementById('screen-title').textContent = titleMap[route].title;
+        document.getElementById('screen-subtitle').textContent = titleMap[route].sub;
       }
 
-      // Update URL hash without reload
-      if (history.pushState) {
-        history.pushState(null, null, `#${tabId}`);
+      // Activate Target Screen
+      switch (route) {
+        case 'onboarding':
+          document.getElementById('screen-onboarding').classList.add('active');
+          break;
+        case 'inicio':
+          document.getElementById('screen-inicio').classList.add('active');
+          renderDashboardScreen();
+          break;
+        case 'uso':
+          document.getElementById('screen-uso').classList.add('active');
+          renderUsageScreen();
+          break;
+        case 'limites':
+          document.getElementById('screen-limites').classList.add('active');
+          renderLimitsScreen();
+          break;
+        case 'estadisticas':
+          document.getElementById('screen-estadisticas').classList.add('active');
+          if (param) document.getElementById('stats-app-filter').value = param;
+          renderStatsScreen();
+          break;
+        case 'crear-limite':
+          document.getElementById('screen-add-edit-limit').classList.add('active');
+          setupLimitForm(false, null, param);
+          break;
+        case 'editar-limite':
+          document.getElementById('screen-add-edit-limit').classList.add('active');
+          setupLimitForm(true, param);
+          break;
+        case 'app-detalle':
+          document.getElementById('screen-app-detail').classList.add('active');
+          currentAppDetailId = param;
+          renderAppDetailScreen(param);
+          break;
       }
+
+      // Sync URL hash for deep-linking
+      let hash = `#${route}`;
+      if (param) hash += `/${param}`;
+      if (window.location.hash !== hash) {
+        history.pushState({ route, param }, '', hash);
+      }
+    }
+
+    // Handle browser popstate (back/forward)
+    window.addEventListener('popstate', (e) => {
+      resolveRouteFromUrl();
+    });
+
+    function resolveRouteFromUrl() {
+      const hash = window.location.hash.replace('#', '') || window.location.pathname.replace('/', '');
+      const parts = hash.split('/');
+      const route = parts[0] || 'inicio';
+      const param = parts[1] || null;
+
+      const validRoutes = ['onboarding', 'inicio', 'uso', 'limites', 'estadisticas', 'crear-limite', 'editar-limite', 'app-detalle'];
+      if (validRoutes.includes(route)) {
+        navigateTo(route, param);
+      } else {
+        navigateTo('inicio');
+      }
+    }
+
+    // --- Onboarding Logic ---
+    function completeOnboarding() {
+      const prefs = Store.getPrefs();
+      prefs.hasCompletedOnboarding = true;
+      Store.setPrefs(prefs);
+      showToast("Bienvenido a Screenly");
+      navigateTo('inicio');
+    }
+
+    function resetOnboarding() {
+      const prefs = Store.getPrefs();
+      prefs.hasCompletedOnboarding = false;
+      Store.setPrefs(prefs);
+      closeDrawer('simulator');
+      showToast("Onboarding reiniciado");
+      navigateTo('onboarding');
+    }
+
+    function togglePermissionState(type, granted) {
+      const prefs = Store.getPrefs();
+      if (type === 'usage') prefs.usagePerm = granted;
+      if (type === 'notif') prefs.notifPerm = granted;
+      Store.setPrefs(prefs);
+      showToast(`Permiso ${type === 'usage' ? 'Uso' : 'Notificaciones'} ${granted ? 'concedido' : 'revocado'}`);
+    }
+
+    // --- Dashboard Screen Renderer ---
+    function renderDashboardScreen() {
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+
+      // Today's total usage calculation
+      let totalMinutes = 0;
+      let productiveMinutes = 0;
+      let leisureMinutes = 0;
+
+      apps.forEach(app => {
+        const mins = getAppMinutes(app.id, 0); // 0 = today
+        totalMinutes += mins;
+        if (app.category === "Productividad" || app.category === "Trabajo") {
+          productiveMinutes += mins;
+        } else {
+          leisureMinutes += mins;
+        }
+      });
+
+      document.getElementById('dash-total-time').textContent = formatMinutes(totalMinutes);
+      document.getElementById('dash-stat-prod').textContent = formatMinutes(productiveMinutes);
+      document.getElementById('dash-stat-ocio').textContent = formatMinutes(leisureMinutes);
+
+      const dailyGoalMins = 330; // 5h 30m
+      const goalPct = Math.min(100, Math.round((totalMinutes / dailyGoalMins) * 100));
+      document.getElementById('dash-progress-fill').style.width = `${goalPct}%`;
+      document.getElementById('dash-meta-pct').textContent = `${goalPct}% de meta diaria`;
+
+      // Check for urgent limit alerts on Dashboard
+      let reachedApp = null;
+      limits.filter(l => l.isActive).forEach(lim => {
+        const used = getAppMinutes(lim.appId, 0);
+        if (lim.dailyLimitMinutes > 0 && used >= lim.dailyLimitMinutes) {
+          const app = apps.find(a => a.id === lim.appId);
+          if (app) reachedApp = { app, lim, used };
+        }
+      });
+
+      const alertBanner = document.getElementById('dash-alert-banner');
+      if (reachedApp) {
+        alertBanner.style.display = 'block';
+        alertBanner.innerHTML = `
+          <div class="sc-card" style="border-left: 4px solid var(--danger); padding: 14px 16px; margin: 0; background: #FFF5F5;">
+            <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between;">
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <span style="font-size: 1.3rem;">⚠️</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 0.85rem; color: var(--danger);">Límite alcanzado: ${reachedApp.app.name}</div>
+                  <div style="font-size: 0.76rem; color: var(--text-muted);">Consumo: ${formatMinutes(reachedApp.used)} de ${formatMinutes(reachedApp.lim.dailyLimitMinutes)}</div>
+                </div>
+              </div>
+              <button class="btn-action-small" onclick="navigateTo('app-detalle', '${reachedApp.app.id}')">Ver</button>
+            </div>
+          </div>
+        `;
+      } else {
+        alertBanner.style.display = 'none';
+      }
+
+      // Top 4 apps list
+      const topAppsContainer = document.getElementById('dash-top-apps-list');
+      topAppsContainer.innerHTML = '';
+
+      const sortedApps = [...apps].sort((a, b) => getAppMinutes(b.id, 0) - getAppMinutes(a.id, 0)).slice(0, 4);
+
+      sortedApps.forEach(app => {
+        const mins = getAppMinutes(app.id, 0);
+        const limit = limits.find(l => l.appId === app.id);
+        const status = calculateLimitStatus(limit, mins);
+
+        const item = document.createElement('div');
+        item.className = 'app-item';
+        item.onclick = () => navigateTo('app-detalle', app.id);
+        item.innerHTML = `
+          <div class="app-avatar" style="background: ${app.bg}">${app.icon}</div>
+          <div class="app-details">
+            <div class="app-name-row">
+              <span class="app-name">${app.name}</span>
+              <span class="app-time">${formatMinutes(mins)}</span>
+            </div>
+            <div class="app-bar-wrap">
+              <div class="app-bar-fill" style="width: ${Math.min(100, Math.round((mins / 120) * 100))}%; background: ${status.type === 'ALCANZADO' ? 'var(--danger)' : 'var(--primary)'}"></div>
+            </div>
+            <div class="app-category-badge">
+              <span>${app.category}</span>
+              ${limit ? `<span class="limit-status-badge ${status.badgeClass}" style="font-size:0.62rem; padding: 1px 5px;">${status.label}</span>` : ''}
+            </div>
+          </div>
+        `;
+        topAppsContainer.appendChild(item);
+      });
+    }
+
+    // --- Usage Screen & Interactive Calendar ---
+    function toggleCalendarWidget() {
+      calendarWidgetExpanded = !calendarWidgetExpanded;
+      const widget = document.getElementById('calendar-widget');
+      const label = document.getElementById('lbl-toggle-cal');
+      const btn = document.getElementById('btn-toggle-cal');
+
+      if (calendarWidgetExpanded) {
+        widget.style.display = 'block';
+        label.textContent = 'Ocultar calendario';
+        btn.classList.add('active');
+      } else {
+        widget.style.display = 'none';
+        label.textContent = 'Mostrar calendario';
+        btn.classList.remove('active');
+      }
+    }
+
+    function navMonth(delta) {
+      calMonth += delta;
+      if (calMonth > 11) {
+        calMonth = 0;
+        calYear++;
+      } else if (calMonth < 0) {
+        calMonth = 11;
+        calYear--;
+      }
+      isMonthFilter = false;
+      renderCalendarGrid();
+      renderUsageScreen();
+    }
+
+    function selectToday() {
+      calYear = 2026;
+      calMonth = 9; // October
+      selectedDay = 24;
+      isMonthFilter = false;
+      updateCalendarPills('today');
+      renderCalendarGrid();
+      renderUsageScreen();
+    }
+
+    function selectYesterday() {
+      calYear = 2026;
+      calMonth = 9;
+      selectedDay = 23;
+      isMonthFilter = false;
+      updateCalendarPills('yesterday');
+      renderCalendarGrid();
+      renderUsageScreen();
+    }
+
+    function selectFullMonth() {
+      isMonthFilter = true;
+      updateCalendarPills('month');
+      renderCalendarGrid();
+      renderUsageScreen();
+    }
+
+    function updateCalendarPills(active) {
+      document.getElementById('chip-today').classList.toggle('active', active === 'today');
+      document.getElementById('chip-yesterday').classList.toggle('active', active === 'yesterday');
+      document.getElementById('chip-month-full').classList.toggle('active', active === 'month');
+    }
+
+    function renderCalendarGrid() {
+      document.getElementById('cal-month-title').textContent = `${MONTH_NAMES[calMonth]} ${calYear}`;
+      const grid = document.getElementById('calendar-days-grid');
+      grid.innerHTML = '';
+
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const startCol = (firstDay + 6) % 7; // Monday = 0
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+      // Empty lead cells
+      for (let i = 0; i < startCol; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell empty';
+        grid.appendChild(cell);
+      }
+
+      // Day cells
+      for (let day = 1; day <= daysInMonth; day++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell';
+        cell.textContent = day;
+
+        // Is Today (24 Oct 2026)
+        if (day === 24 && calMonth === 9 && calYear === 2026) {
+          cell.classList.add('today');
+        }
+
+        // Is Selected
+        if (!isMonthFilter && day === selectedDay) {
+          cell.classList.add('selected');
+        }
+
+        // Has data dot
+        const dot = document.createElement('span');
+        dot.className = 'cal-dot';
+        cell.appendChild(dot);
+
+        cell.onclick = () => {
+          selectedDay = day;
+          isMonthFilter = false;
+          updateCalendarPills('day');
+          renderCalendarGrid();
+          renderUsageScreen();
+        };
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function renderUsageScreen() {
+      renderCalendarGrid();
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+      const container = document.getElementById('usage-apps-list');
+      container.innerHTML = '';
+
+      let statusText = "";
+      let modeBadge = "Día";
+
+      // Calculate days offset from today (24 Oct 2026)
+      let offset = 0;
+      if (isMonthFilter) {
+        statusText = `Consultando mes completo: ${MONTH_NAMES[calMonth]} ${calYear}`;
+        modeBadge = "Mes";
+      } else {
+        offset = Math.abs(24 - selectedDay);
+        if (selectedDay === 24 && calMonth === 9 && calYear === 2026) {
+          statusText = "Consultando hoy: 24 de Octubre de 2026";
+        } else if (selectedDay === 23 && calMonth === 9 && calYear === 2026) {
+          statusText = "Consultando ayer: 23 de Octubre de 2026";
+        } else {
+          statusText = `Día seleccionado: ${selectedDay} de ${MONTH_NAMES[calMonth]} de ${calYear}`;
+        }
+      }
+
+      document.getElementById('cal-status-text').textContent = statusText;
+      document.getElementById('cal-mode-badge').textContent = modeBadge;
+      document.getElementById('filter-summary-pill').textContent = modeBadge === 'Mes' ? `Mes ${MONTH_NAMES[calMonth]}` : `${selectedDay} ${MONTH_NAMES[calMonth]}`;
+
+      // Calculate usage for each app
+      let totalTime = 0;
+      const usageItems = apps.map(app => {
+        let mins = 0;
+        if (isMonthFilter) {
+          // Aggregate entire month (~28x daily average)
+          mins = Math.round(getAppMinutes(app.id, 0) * 26 + (app.id.length * 8));
+        } else {
+          mins = getAppMinutes(app.id, offset);
+        }
+        totalTime += mins;
+        const limit = limits.find(l => l.appId === app.id);
+        const status = calculateLimitStatus(limit, mins);
+        return { app, mins, limit, status };
+      }).sort((a, b) => b.mins - a.mins);
+
+      document.getElementById('total-usage-time-label').textContent = formatMinutes(totalTime);
+
+      usageItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'app-item';
+        div.onclick = () => navigateTo('app-detalle', item.app.id);
+
+        const maxScale = isMonthFilter ? 2800 : 120;
+        const pct = Math.min(100, Math.round((item.mins / maxScale) * 100));
+
+        div.innerHTML = `
+          <div class="app-avatar" style="background: ${item.app.bg}">${item.app.icon}</div>
+          <div class="app-details">
+            <div class="app-name-row">
+              <span class="app-name">${item.app.name}</span>
+              <span class="app-time">${formatMinutes(item.mins)}</span>
+            </div>
+            <div class="app-bar-wrap">
+              <div class="app-bar-fill" style="width: ${pct}%; background: ${item.status.type === 'ALCANZADO' ? 'var(--danger)' : 'var(--primary)'}"></div>
+            </div>
+            <div class="app-category-badge">
+              <span>${item.app.category}</span>
+              ${item.limit ? `<span class="limit-status-badge ${item.status.badgeClass}">${item.status.label}</span>` : '<span>Sin límite</span>'}
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // --- Limits Screen ---
+    function renderLimitsScreen() {
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+      const container = document.getElementById('limits-container');
+      container.innerHTML = '';
+
+      let countActive = 0;
+      let countReached = 0;
+      let countProximity = 0;
+
+      if (limits.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 32px 16px; color: var(--text-muted);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">🛡️</div>
+            <div style="font-weight: 700; color: var(--text-main);">No hay límites configurados</div>
+            <p style="font-size: 0.8rem; margin-top: 4px;">Crea tu primer límite diario para controlar el tiempo en tus aplicaciones.</p>
+          </div>
+        `;
+      }
+
+      limits.forEach(lim => {
+        const app = apps.find(a => a.id === lim.appId) || { name: lim.appId, icon: "📱", bg: "#F1F5F9", category: "Aplicación" };
+        const usedToday = getAppMinutes(lim.appId, 0);
+        const status = calculateLimitStatus(lim, usedToday);
+
+        if (lim.isActive) {
+          countActive++;
+          if (status.type === 'ALCANZADO') countReached++;
+          if (status.type === 'PROXIMO') countProximity++;
+        }
+
+        const pct = lim.dailyLimitMinutes > 0 ? Math.min(100, Math.round((usedToday / lim.dailyLimitMinutes) * 100)) : 0;
+
+        const card = document.createElement('div');
+        card.className = 'limit-card';
+        card.innerHTML = `
+          <div class="limit-top-row">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="app-avatar" style="background: ${app.bg}; width: 38px; height: 38px; font-size: 1.2rem; margin-right: 0;">${app.icon}</div>
+              <div>
+                <strong style="font-size: 0.92rem; color: var(--text-main); display: block;">${app.name}</strong>
+                <span class="limit-status-badge ${status.badgeClass}">${status.label}</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" ${lim.isActive ? 'checked' : ''} onchange="toggleLimitActive('${lim.id}', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin: 8px 0 4px;">
+            <span>Usado hoy: <strong style="color:var(--text-main)">${formatMinutes(usedToday)}</strong></span>
+            <span>Límite: <strong style="color:var(--text-main)">${formatMinutes(lim.dailyLimitMinutes)}</strong></span>
+          </div>
+
+          <div class="app-bar-wrap">
+            <div class="app-bar-fill" style="width: ${pct}%; background: ${status.type === 'ALCANZADO' ? 'var(--danger)' : (status.type === 'PROXIMO' ? 'var(--warning)' : 'var(--primary)')}"></div>
+          </div>
+
+          ${lim.hasValidityPeriod ? `
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px;">
+              📅 Vigencia: ${lim.startDate || 'Inicio'} hasta ${lim.endDate || 'Fin'}
+            </div>
+          ` : ''}
+
+          <div class="limit-actions-row">
+            <button class="btn-action-small" onclick="navigateTo('editar-limite', '${lim.id}')">
+              ✏️ Editar
+            </button>
+            <button class="btn-action-small delete" onclick="promptDeleteLimit('${lim.id}')">
+              🗑️ Eliminar
+            </button>
+            <button class="btn-action-small" style="margin-left: auto;" onclick="navigateTo('app-detalle', '${lim.appId}')">
+              Detalle →
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('stat-lim-activos').textContent = countActive;
+      document.getElementById('stat-lim-alcanzados').textContent = countReached;
+      document.getElementById('stat-lim-proximos').textContent = countProximity;
+    }
+
+    function toggleLimitActive(limitId, isActive) {
+      const limits = Store.getLimits();
+      const updated = limits.map(l => l.id === limitId ? { ...l, isActive } : l);
+      Store.setLimits(updated);
+      renderLimitsScreen();
+      showToast(isActive ? "Límite activado" : "Límite desactivado");
+    }
+
+    function promptDeleteLimit(limitId) {
+      limitToDeleteId = limitId;
+      const limits = Store.getLimits();
+      const apps = Store.getApps();
+      const lim = limits.find(l => l.id === limitId);
+      const app = lim ? apps.find(a => a.id === lim.appId) : null;
+
+      document.getElementById('modal-delete-desc').textContent = app
+        ? `¿Seguro que deseas eliminar el límite de ${formatMinutes(lim.dailyLimitMinutes)} para ${app.name}?`
+        : "¿Seguro que deseas eliminar este límite de tiempo?";
+
+      document.getElementById('modal-confirm-delete').classList.add('open');
+    }
+
+    function closeDeleteModal() {
+      limitToDeleteId = null;
+      document.getElementById('modal-confirm-delete').classList.remove('open');
+    }
+
+    function confirmDeleteLimit() {
+      if (!limitToDeleteId) return;
+      const limits = Store.getLimits().filter(l => l.id !== limitToDeleteId);
+      Store.setLimits(limits);
+      closeDeleteModal();
+      renderLimitsScreen();
+      showToast("Límite eliminado correctamente");
+    }
+
+    // --- Add/Edit Limit Screen & Form Validation ---
+    function setupLimitForm(isEditing, limitId = null, preselectedAppId = null) {
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+
+      const formTitle = document.getElementById('form-limit-title');
+      const formSubtitle = document.getElementById('form-limit-subtitle');
+      const appSelect = document.getElementById('form-app-select');
+      const hoursInput = document.getElementById('form-hours');
+      const minsInput = document.getElementById('form-minutes');
+      const activeSwitch = document.getElementById('form-active-switch');
+      const hasValiditySwitch = document.getElementById('form-has-validity');
+      const startDateInput = document.getElementById('form-start-date');
+      const endDateInput = document.getElementById('form-end-date');
+      const limitIdHidden = document.getElementById('form-limit-id');
+
+      // Clear previous error messages
+      document.querySelectorAll('.form-error').forEach(el => el.classList.remove('visible'));
+
+      // Populate apps dropdown
+      appSelect.innerHTML = '';
+      apps.forEach(app => {
+        const option = document.createElement('option');
+        option.value = app.id;
+        option.textContent = `${app.name} (${app.category})`;
+        appSelect.appendChild(option);
+      });
+
+      if (isEditing && limitId) {
+        const lim = limits.find(l => l.id === limitId);
+        if (!lim) { navigateTo('limites'); return; }
+
+        formTitle.textContent = "Editar Límite";
+        formSubtitle.textContent = "Modifica los parámetros del límite de uso";
+        limitIdHidden.value = lim.id;
+        appSelect.value = lim.appId;
+        appSelect.disabled = true; // Cannot change app when editing
+
+        hoursInput.value = Math.floor(lim.dailyLimitMinutes / 60);
+        minsInput.value = lim.dailyLimitMinutes % 60;
+        activeSwitch.checked = lim.isActive;
+
+        hasValiditySwitch.checked = lim.hasValidityPeriod;
+        toggleValidityFields(lim.hasValidityPeriod);
+        startDateInput.value = lim.startDate || "";
+        endDateInput.value = lim.endDate || "";
+      } else {
+        formTitle.textContent = "Configurar Nuevo Límite";
+        formSubtitle.textContent = "Define el tiempo diario máximo permitido";
+        limitIdHidden.value = "";
+        appSelect.disabled = false;
+
+        if (preselectedAppId) {
+          appSelect.value = preselectedAppId;
+        } else {
+          // Select first app that doesn't have a limit yet
+          const appsWithoutLimit = apps.filter(a => !limits.some(l => l.appId === a.id));
+          if (appsWithoutLimit.length > 0) {
+            appSelect.value = appsWithoutLimit[0].id;
+          }
+        }
+
+        hoursInput.value = 1;
+        minsInput.value = 30;
+        activeSwitch.checked = true;
+        hasValiditySwitch.checked = false;
+        toggleValidityFields(false);
+
+        const today = new Date().toISOString().split('T')[0];
+        const nextMonth = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+        startDateInput.value = today;
+        endDateInput.value = nextMonth;
+      }
+    }
+
+    function toggleValidityFields(show) {
+      document.getElementById('form-validity-dates').style.display = show ? 'block' : 'none';
+    }
+
+    function handleLimitFormSubmit(e) {
+      e.preventDefault();
+
+      const limitId = document.getElementById('form-limit-id').value;
+      const isEditing = !!limitId;
+      const appId = document.getElementById('form-app-select').value;
+      const hours = parseInt(document.getElementById('form-hours').value) || 0;
+      const mins = parseInt(document.getElementById('form-minutes').value) || 0;
+      const totalMinutes = (hours * 60) + mins;
+      const isActive = document.getElementById('form-active-switch').checked;
+      const hasValidity = document.getElementById('form-has-validity').checked;
+      const startDate = document.getElementById('form-start-date').value || null;
+      const endDate = document.getElementById('form-end-date').value || null;
+
+      // Reset errors
+      document.querySelectorAll('.form-error').forEach(el => el.classList.remove('visible'));
+      let hasError = false;
+
+      if (!appId) {
+        document.getElementById('err-app').classList.add('visible');
+        hasError = true;
+      }
+
+      // Check duplicate limit if creating
+      const limits = Store.getLimits();
+      if (!isEditing && limits.some(l => l.appId === appId)) {
+        const errApp = document.getElementById('err-app');
+        errApp.textContent = "Esta aplicación ya tiene un límite configurado";
+        errApp.classList.add('visible');
+        hasError = true;
+      }
+
+      // Validate total time > 0 and < 1440
+      if (totalMinutes <= 0 || totalMinutes >= 1440) {
+        document.getElementById('err-time').classList.add('visible');
+        hasError = true;
+      }
+
+      // Validate dates
+      if (hasValidity) {
+        if (!startDate || !endDate || endDate < startDate) {
+          document.getElementById('err-validity').classList.add('visible');
+          hasError = true;
+        }
+      }
+
+      if (hasError) return;
+
+      if (isEditing) {
+        const updated = limits.map(l => l.id === limitId ? {
+          ...l,
+          dailyLimitMinutes: totalMinutes,
+          isActive,
+          hasValidityPeriod: hasValidity,
+          startDate: hasValidity ? startDate : null,
+          endDate: hasValidity ? endDate : null
+        } : l);
+        Store.setLimits(updated);
+        showToast("Límite actualizado correctamente");
+      } else {
+        const newLimit = {
+          id: `limit-${Date.now()}`,
+          appId,
+          dailyLimitMinutes: totalMinutes,
+          isActive,
+          hasValidityPeriod: hasValidity,
+          startDate: hasValidity ? startDate : null,
+          endDate: hasValidity ? endDate : null
+        };
+        Store.setLimits([...limits, newLimit]);
+        showToast("Límite guardado correctamente");
+      }
+
+      navigateTo('limites');
+    }
+
+    // --- App Detail Screen ---
+    function renderAppDetailScreen(appId) {
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+      const app = apps.find(a => a.id === appId) || apps[0];
+      const limit = limits.find(l => l.appId === app.id);
+      const usedToday = getAppMinutes(app.id, 0);
+
+      const avatar = document.getElementById('detail-app-avatar');
+      avatar.textContent = app.icon;
+      avatar.style.background = app.bg;
+
+      document.getElementById('detail-app-name').textContent = app.name;
+      document.getElementById('detail-app-meta').textContent = `${app.category} • ${app.packageName}`;
+      document.getElementById('detail-time-today').textContent = formatMinutes(usedToday);
+
+      const totalToday = apps.reduce((sum, a) => sum + getAppMinutes(a.id, 0), 0);
+      const sharePct = totalToday > 0 ? Math.round((usedToday / totalToday) * 100) : 0;
+      document.getElementById('detail-daily-share-pct').textContent = `${sharePct}% del tiempo total de hoy`;
+
+      const launches = Math.max(1, Math.round(usedToday / 5));
+      document.getElementById('detail-launches-count').textContent = launches;
+
+      const fillPct = limit ? Math.min(100, Math.round((usedToday / limit.dailyLimitMinutes) * 100)) : Math.min(100, Math.round((usedToday / 120) * 100));
+      document.getElementById('detail-progress-fill').style.width = `${fillPct}%`;
+
+      const badge = document.getElementById('detail-limit-badge');
+      const desc = document.getElementById('detail-limit-desc');
+      const btnConfig = document.getElementById('btn-detail-config-limit');
+
+      if (limit) {
+        const status = calculateLimitStatus(limit, usedToday);
+        badge.className = `limit-status-badge ${status.badgeClass}`;
+        badge.textContent = status.label;
+
+        desc.innerHTML = `
+          Límite diario: <strong>${formatMinutes(limit.dailyLimitMinutes)}</strong> (${limit.isActive ? 'Activo' : 'Desactivado'}).
+          ${status.type === 'ALCANZADO' ? '<span style="color:var(--danger); display:block; font-weight:700; margin-top:4px;">⚠️ Límite superado. En Android la aplicación estaría bloqueada.</span>' : ''}
+        `;
+        btnConfig.textContent = "Editar límite existente";
+      } else {
+        badge.className = "limit-status-badge badge-inactivo";
+        badge.textContent = "Sin límite";
+        desc.textContent = "No tienes un límite diario para esta aplicación. Puedes configurar uno para controlar su tiempo de uso.";
+        btnConfig.textContent = "Configurar límite de tiempo";
+      }
+    }
+
+    function handleDetailConfigLimit() {
+      const limits = Store.getLimits();
+      const existing = limits.find(l => l.appId === currentAppDetailId);
+      if (existing) {
+        navigateTo('editar-limite', existing.id);
+      } else {
+        navigateTo('crear-limite', currentAppDetailId);
+      }
+    }
+
+    function handleDetailViewStats() {
+      navigateTo('estadisticas', currentAppDetailId);
+    }
+
+    // --- Stats Screen ---
+    function renderStatsScreen() {
+      const apps = Store.getApps();
+      const appFilterSelect = document.getElementById('stats-app-filter');
+
+      // Populate app filter dropdown once
+      if (appFilterSelect.options.length <= 1) {
+        apps.forEach(app => {
+          const opt = document.createElement('option');
+          opt.value = app.id;
+          opt.textContent = app.name;
+          appFilterSelect.appendChild(opt);
+        });
+      }
+
+      const selectedAppId = appFilterSelect.value;
+      const selectedPeriod = document.getElementById('stats-period-filter').value;
+
+      // Daily Breakdown Data (Lun - Dom)
+      const dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      let dayValues = [0, 0, 0, 0, 0, 0, 0];
+
+      if (selectedAppId === 'ALL') {
+        apps.forEach(app => {
+          const hist = HISTORICAL_MINUTES[app.id] || [0,0,0,0,0,0,0];
+          for (let i = 0; i < 7; i++) {
+            dayValues[6 - i] += (hist[i] || 0); // reverse so index 6 is today
+          }
+        });
+      } else {
+        const hist = HISTORICAL_MINUTES[selectedAppId] || [0,0,0,0,0,0,0];
+        for (let i = 0; i < 7; i++) {
+          dayValues[6 - i] = hist[i] || 0;
+        }
+      }
+
+      // Bar Chart
+      const maxVal = Math.max(...dayValues, 60);
+      const chartContainer = document.getElementById('stats-bar-chart');
+      chartContainer.innerHTML = '';
+
+      let totalPeriodMinutes = 0;
+
+      dayValues.forEach((val, idx) => {
+        totalPeriodMinutes += val;
+        const pct = Math.min(100, Math.round((val / maxVal) * 100));
+        const isToday = (idx === 6);
+
+        const col = document.createElement('div');
+        col.className = `bar-col ${isToday ? 'active' : ''}`;
+        col.innerHTML = `
+          <div class="bar-pill" style="height: ${Math.max(8, pct)}%;" data-val="${formatMinutes(val)}"></div>
+          <span class="bar-label">${dayLabels[idx]}</span>
+        `;
+        chartContainer.appendChild(col);
+      });
+
+      const avgMinutes = Math.round(totalPeriodMinutes / 7);
+      document.getElementById('stats-avg-label').textContent = `Promedio: ${formatMinutes(avgMinutes)} / día`;
+
+      // Categories Breakdown
+      const catTotals = {};
+      apps.forEach(app => {
+        const mins = getAppMinutes(app.id, 0);
+        catTotals[app.category] = (catTotals[app.category] || 0) + mins;
+      });
+
+      const catContainer = document.getElementById('stats-categories-list');
+      catContainer.innerHTML = '';
+      const totalCatMins = Object.values(catTotals).reduce((a, b) => a + b, 0) || 1;
+
+      Object.entries(catTotals).sort((a,b) => b[1] - a[1]).forEach(([category, mins]) => {
+        const pct = Math.round((mins / totalCatMins) * 100);
+        const row = document.createElement('div');
+        row.style.marginBottom = '12px';
+        row.innerHTML = `
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px;">
+            <span>${category}</span>
+            <span>${pct}% (${formatMinutes(mins)})</span>
+          </div>
+          <div class="app-bar-wrap">
+            <div class="app-bar-fill" style="width: ${pct}%;"></div>
+          </div>
+        `;
+        catContainer.appendChild(row);
+      });
+    }
+
+    // --- Alerts Center Drawer ---
+    function openDrawer(type) {
+      if (type === 'alerts') {
+        renderAlertsDrawer();
+        document.getElementById('drawer-alerts').classList.add('open');
+      } else if (type === 'simulator') {
+        document.getElementById('drawer-simulator').classList.add('open');
+      }
+    }
+
+    function closeDrawer(type) {
+      if (type === 'alerts') document.getElementById('drawer-alerts').classList.remove('open');
+      if (type === 'simulator') document.getElementById('drawer-simulator').classList.remove('open');
+    }
+
+    function renderAlertsDrawer() {
+      const alerts = Store.getAlerts();
+      const container = document.getElementById('alerts-list-container');
+      container.innerHTML = '';
+
+      const unreadCount = alerts.filter(a => !a.isRead).length;
+      const badgeHeader = document.getElementById('header-unread-count');
+      const badgeDrawer = document.getElementById('alerts-unread-badge');
+
+      if (unreadCount > 0) {
+        badgeHeader.style.display = 'flex';
+        badgeHeader.textContent = unreadCount;
+        badgeDrawer.style.display = 'flex';
+        badgeDrawer.textContent = unreadCount;
+      } else {
+        badgeHeader.style.display = 'none';
+        badgeDrawer.style.display = 'none';
+      }
+
+      if (alerts.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 24px 0; color: var(--text-muted); font-size: 0.85rem;">
+            No tienes alertas pendientes de bienestar.
+          </div>
+        `;
+        return;
+      }
+
+      alerts.forEach(alert => {
+        const card = document.createElement('div');
+        card.className = 'sc-card';
+        card.style.cursor = 'pointer';
+        card.style.marginBottom = '8px';
+        card.style.padding = '12px 14px';
+        if (!alert.isRead) card.style.borderColor = 'var(--primary)';
+
+        const is100 = alert.threshold === 'REACHED_100';
+        card.innerHTML = `
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 1.3rem;">${is100 ? '🛑' : '⚠️'}</span>
+            <div style="flex:1;">
+              <div style="display: flex; justify-content: space-between;">
+                <strong style="font-size: 0.88rem; color: ${is100 ? 'var(--danger)' : 'var(--warning)'};">${alert.appName}</strong>
+                <span style="font-size: 0.7rem; color: var(--text-muted);">${alert.timestamp}</span>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
+                ${is100 ? `Límite superado: ${formatMinutes(alert.minutesUsed)} de ${formatMinutes(alert.limitMinutes)} asignados.` : `Próximo al límite: 80% consumido (${formatMinutes(alert.minutesUsed)} de ${formatMinutes(alert.limitMinutes)}).`}
+              </p>
+            </div>
+          </div>
+        `;
+
+        card.onclick = () => {
+          markAlertAsRead(alert.id);
+          closeDrawer('alerts');
+          navigateTo('app-detalle', alert.appId);
+        };
+
+        container.appendChild(card);
+      });
+    }
+
+    function markAlertAsRead(alertId) {
+      const alerts = Store.getAlerts().map(a => a.id === alertId ? { ...a, isRead: true } : a);
+      Store.setAlerts(alerts);
+      renderAlertsDrawer();
+    }
+
+    function clearAllAlerts() {
+      Store.setAlerts([]);
+      renderAlertsDrawer();
+      showToast("Todas las alertas han sido eliminadas");
+    }
+
+    // --- Simulator & Limit Dialogs ---
+    function simulateLimitReached(appId) {
+      closeDrawer('simulator');
+      const apps = Store.getApps();
+      const limits = Store.getLimits();
+      const app = apps.find(a => a.id === appId) || apps[0];
+      const lim = limits.find(l => l.appId === appId) || { dailyLimitMinutes: 60 };
+
+      // Add alert to store
+      const alerts = Store.getAlerts();
+      const newAlert = {
+        id: `alert-${Date.now()}`,
+        appId: app.id,
+        appName: app.name,
+        threshold: "REACHED_100",
+        minutesUsed: lim.dailyLimitMinutes + 5,
+        limitMinutes: lim.dailyLimitMinutes,
+        timestamp: "Ahora",
+        isRead: false
+      };
+      Store.setAlerts([newAlert, ...alerts]);
+      renderAlertsDrawer();
+
+      // Show modal dialog matching LimitReachedDialog.kt
+      document.getElementById('modal-limit-reached-desc').textContent =
+        `Has superado el tiempo diario asignado de ${formatMinutes(lim.dailyLimitMinutes)} para ${app.name}.`;
+      document.getElementById('modal-limit-reached').classList.add('open');
+    }
+
+    function closeLimitReachedModal() {
+      document.getElementById('modal-limit-reached').classList.remove('open');
+      showToast("Alerta registrada en el Centro de Alertas");
+    }
+
+    function resetToInitialData() {
+      localStorage.removeItem('screenly_limits');
+      localStorage.removeItem('screenly_alerts');
+      localStorage.removeItem('screenly_prefs');
+      closeDrawer('simulator');
+      showToast("Datos restablecidos a la configuración de fábrica");
+      navigateTo('inicio');
     }
 
     // --- Device View Toggle ---
@@ -1429,346 +2833,45 @@
       }
     }
 
-    // --- Calendar Controls ---
-    function toggleCalendar() {
-      calendarExpanded = !calendarExpanded;
-      const widget = document.getElementById('calendar-widget');
-      const label = document.getElementById('lbl-toggle-cal');
-      const btn = document.getElementById('btn-toggle-cal');
-
-      if (calendarExpanded) {
-        widget.style.display = 'block';
-        label.textContent = 'Ocultar calendario';
-        btn.classList.add('active');
-      } else {
-        widget.style.display = 'none';
-        label.textContent = 'Mostrar calendario';
-        btn.classList.remove('active');
-      }
+    // --- Toast Snackbar Notification ---
+    let toastTimeout = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast-snackbar');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('visible');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3000);
     }
 
-    function navMonth(delta) {
-      currentMonth += delta;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
-      } else if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
-      }
-      isMonthMode = false;
-      renderCalendar();
-    }
-
-    function selectToday() {
-      currentYear = 2026;
-      currentMonth = 9; // Octubre
-      selectedDay = 24;
-      isMonthMode = false;
-      document.getElementById('chip-today').classList.add('active');
-      document.getElementById('chip-yesterday').classList.remove('active');
-      document.getElementById('chip-month-full').classList.remove('active');
-      updateCalendarStatus('Consultando hoy: 24 de Octubre de 2026', 'Día');
-      renderCalendar();
-      renderUsageList();
-    }
-
-    function selectYesterday() {
-      currentYear = 2026;
-      currentMonth = 9;
-      selectedDay = 23;
-      isMonthMode = false;
-      document.getElementById('chip-yesterday').classList.add('active');
-      document.getElementById('chip-today').classList.remove('active');
-      document.getElementById('chip-month-full').classList.remove('active');
-      updateCalendarStatus('Consultando ayer: 23 de Octubre de 2026', 'Día');
-      renderCalendar();
-      renderUsageList();
-    }
-
-    function selectFullMonth() {
-      isMonthMode = true;
-      document.getElementById('chip-month-full').classList.add('active');
-      document.getElementById('chip-today').classList.remove('active');
-      document.getElementById('chip-yesterday').classList.remove('active');
-      updateCalendarStatus(`Consultando mes completo: ${monthNames[currentMonth]} ${currentYear}`, 'Mes');
-      renderCalendar();
-      renderUsageList();
-    }
-
-    function updateCalendarStatus(text, badge) {
-      document.getElementById('cal-status-text').textContent = text;
-      document.getElementById('cal-mode-badge').textContent = badge;
-      document.getElementById('filter-summary-pill').textContent = `Filtrado por: ${badge === 'Mes' ? 'Mes completo' : selectedDay + ' ' + monthNames[currentMonth]}`;
-    }
-
-    function renderCalendar() {
-      document.getElementById('cal-month-title').textContent = `${monthNames[currentMonth]} ${currentYear}`;
-      const grid = document.getElementById('calendar-days-grid');
-      grid.innerHTML = '';
-
-      // First day of month (0 = Sunday, 1 = Monday, etc.)
-      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-      // Shift so Monday is 0:
-      const startCol = (firstDay + 6) % 7;
-      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-      // Empty lead days
-      for (let i = 0; i < startCol; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'cal-day-cell empty';
-        cell.textContent = '';
-        grid.appendChild(cell);
-      }
-
-      // Month days
-      for (let day = 1; day <= daysInMonth; day++) {
-        const cell = document.createElement('div');
-        cell.className = 'cal-day-cell';
-        cell.textContent = day;
-
-        // Is Today (24 Oct 2026)
-        if (day === 24 && currentMonth === 9 && currentYear === 2026) {
-          cell.classList.add('today');
-        }
-
-        // Is Selected
-        if (!isMonthMode && day === selectedDay) {
-          cell.classList.add('selected');
-        }
-
-        // Indicator dot for apps with data
-        if (day % 2 === 0 || day === 23 || day === 24) {
-          const dot = document.createElement('span');
-          dot.className = 'cal-dot';
-          cell.appendChild(dot);
-        }
-
-        cell.onclick = () => {
-          selectedDay = day;
-          isMonthMode = false;
-          document.getElementById('chip-today').classList.remove('active');
-          document.getElementById('chip-yesterday').classList.remove('active');
-          document.getElementById('chip-month-full').classList.remove('active');
-          updateCalendarStatus(`Día seleccionado: ${day} de ${monthNames[currentMonth]} de ${currentYear}`, 'Día');
-          renderCalendar();
-          renderUsageList();
-        };
-
-        grid.appendChild(cell);
-      }
-    }
-
-    // --- Render App Lists ---
-    function formatTime(mins) {
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      if (h > 0) return `${h}h ${m}min`;
-      return `${m}min`;
-    }
-
-    function renderUsageList() {
-      const container = document.getElementById('usage-apps-list');
-      container.innerHTML = '';
-
-      // Add small dynamic variation based on selected day for realism
-      const factor = isMonthMode ? 28 : (0.8 + ((selectedDay * 7) % 5) * 0.1);
-
-      allAppsData.forEach(app => {
-        const adjTime = Math.round(app.timeMin * factor);
-        const item = document.createElement('div');
-        item.className = 'app-item';
-        item.innerHTML = `
-          <div class="app-avatar" style="background: ${app.bg}">${app.icon}</div>
-          <div class="app-details">
-            <div class="app-name-row">
-              <span class="app-name">${app.name}</span>
-              <span class="app-time">${formatTime(adjTime)}</span>
-            </div>
-            <div class="app-bar-wrap">
-              <div class="app-bar-fill" style="width: ${Math.min(100, Math.round((adjTime / (isMonthMode ? 2400 : 90)) * 100))}%;"></div>
-            </div>
-            <span class="app-category-badge">${app.cat}</span>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function renderDashboardApps() {
-      const container = document.getElementById('top-apps-container');
-      container.innerHTML = '';
-
-      allAppsData.slice(0, 4).forEach(app => {
-        const item = document.createElement('div');
-        item.className = 'app-item';
-        item.innerHTML = `
-          <div class="app-avatar" style="background: ${app.bg}">${app.icon}</div>
-          <div class="app-details">
-            <div class="app-name-row">
-              <span class="app-name">${app.name}</span>
-              <span class="app-time">${formatTime(app.timeMin)}</span>
-            </div>
-            <div class="app-bar-wrap">
-              <div class="app-bar-fill" style="width: ${Math.round((app.timeMin / 70) * 100)}%;"></div>
-            </div>
-            <span class="app-category-badge">${app.cat}</span>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function renderLimits() {
-      const container = document.getElementById('limits-container');
-      container.innerHTML = '';
-
-      allAppsData.filter(a => a.limitMin > 0).forEach(app => {
-        const pct = Math.round((app.timeMin / app.limitMin) * 100);
-        let badgeType = 'vigente';
-        let badgeText = 'Vigente';
-
-        if (pct >= 100) {
-          badgeType = 'alcanzado';
-          badgeText = 'Alcanzado';
-        } else if (pct >= 80) {
-          badgeType = 'proximo';
-          badgeText = 'Próximo (80%+)';
-        }
-
-        const card = document.createElement('div');
-        card.className = 'limit-card';
-        card.innerHTML = `
-          <div class="limit-top-row">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 1.25rem;">${app.icon}</span>
-              <div>
-                <strong style="font-size: 0.9rem; color: var(--text-main);">${app.name}</strong>
-                <span class="limit-badge ${badgeType}">${badgeText}</span>
-              </div>
-            </div>
-            <label class="switch">
-              <input type="checkbox" ${app.active ? 'checked' : ''} onchange="toggleLimit('${app.id}', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin: 8px 0 4px;">
-            <span>Usado: <strong>${formatTime(app.timeMin)}</strong></span>
-            <span>Límite: <strong>${formatTime(app.limitMin)}</strong></span>
-          </div>
-          <div class="app-bar-wrap">
-            <div class="app-bar-fill" style="width: ${Math.min(100, pct)}%; background: ${badgeType === 'alcanzado' ? 'var(--danger)' : (badgeType === 'proximo' ? 'var(--warning)' : 'var(--primary)')};"></div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function toggleLimit(id, val) {
-      const app = allAppsData.find(a => a.id === id);
-      if (app) app.active = val;
-      updateLimitCounters();
-    }
-
-    function updateLimitCounters() {
-      const activeLimits = allAppsData.filter(a => a.limitMin > 0 && a.active);
-      document.getElementById('stat-lim-activos').textContent = activeLimits.length;
-      document.getElementById('stat-lim-alcanzados').textContent = activeLimits.filter(a => a.timeMin >= a.limitMin).length;
-      document.getElementById('stat-lim-proximos').textContent = activeLimits.filter(a => (a.timeMin / a.limitMin) >= 0.8 && a.timeMin < a.limitMin).length;
-    }
-
-    // --- Weekly Bar Chart ---
-    function renderWeeklyChart() {
-      const chart = document.getElementById('weekly-bar-chart');
-      chart.innerHTML = '';
-      const days = [
-        { label: 'Lun', hours: 4.2 },
-        { label: 'Mar', hours: 3.8 },
-        { label: 'Mié', hours: 5.1 },
-        { label: 'Jue', hours: 4.0 },
-        { label: 'Vie', hours: 4.8 },
-        { label: 'Sáb', hours: 3.5 },
-        { label: 'Dom', hours: 4.5, active: true }
-      ];
-
-      days.forEach(d => {
-        const pct = Math.round((d.hours / 6.0) * 100);
-        const col = document.createElement('div');
-        col.className = `bar-col ${d.active ? 'active' : ''}`;
-        col.innerHTML = `
-          <div class="bar-pill" style="height: ${pct}%;" data-val="${d.hours}h"></div>
-          <span class="bar-label">${d.label}</span>
-        `;
-        chart.appendChild(col);
-      });
-    }
-
-    // --- Modals ---
-    function openNewLimitModal() {
-      document.getElementById('modal-new-limit').classList.add('open');
-    }
-    function closeNewLimitModal() {
-      document.getElementById('modal-new-limit').classList.remove('open');
-    }
-    function saveNewLimit() {
-      const appName = document.getElementById('modal-app-select').value;
-      const hours = parseInt(document.getElementById('modal-hours-select').value);
-      const mins = parseInt(document.getElementById('modal-mins-select').value);
-      const totalMins = (hours * 60) + mins;
-
-      allAppsData.push({
-        id: 'custom_' + Date.now(),
-        name: appName,
-        cat: 'Personalizada',
-        icon: '📱',
-        bg: '#F1F5F9',
-        timeMin: 15,
-        limitMin: totalMins,
-        active: true
-      });
-
-      renderLimits();
-      updateLimitCounters();
-      closeNewLimitModal();
-    }
-
-    function openInfoModal() {
-      document.getElementById('modal-info').classList.add('open');
-    }
-    function closeInfoModal() {
-      document.getElementById('modal-info').classList.remove('open');
-    }
-
-    // --- Initialization & Route handling ---
-    window.addEventListener('DOMContentLoaded', () => {
-      renderCalendar();
-      renderDashboardApps();
-      renderUsageList();
-      renderLimits();
-      updateLimitCounters();
-      renderWeeklyChart();
-
-      // Check current URL hash or pathname for tab
-      const hash = window.location.hash.replace('#', '');
-      if (['inicio', 'uso', 'limites', 'estadisticas'].includes(hash)) {
-        switchTab(hash);
-      } else {
-        const path = window.location.pathname.replace('/', '').toLowerCase();
-        if (['inicio', 'uso', 'limites', 'estadisticas'].includes(path)) {
-          switchTab(path);
-        }
-      }
-
-      // Live status clock
+    // --- Clock update ---
+    function updateClock() {
       const now = new Date();
-      document.getElementById('live-time').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    });
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('live-time').textContent = timeStr;
+    }
 
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', () => {
-      const hash = window.location.hash.replace('#', '');
-      if (['inicio', 'uso', 'limites', 'estadisticas'].includes(hash)) {
-        switchTab(hash);
+    // --- App Boot ---
+    window.addEventListener('DOMContentLoaded', () => {
+      updateClock();
+      setInterval(updateClock, 30000);
+
+      // Check onboarding state
+      const prefs = Store.getPrefs();
+      if (!prefs.hasCompletedOnboarding) {
+        navigateTo('onboarding');
+      } else {
+        resolveRouteFromUrl();
+      }
+
+      // Initial unread alerts check
+      const alerts = Store.getAlerts();
+      const unread = alerts.filter(a => !a.isRead).length;
+      const badge = document.getElementById('header-unread-count');
+      if (unread > 0) {
+        badge.style.display = 'flex';
+        badge.textContent = unread;
       }
     });
   </script>
