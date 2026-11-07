@@ -156,20 +156,74 @@ class ScreenlyViewModel(
         }
     }
 
+    private var appContextRef: Context? = null
+    private val notifiedAlertIds = mutableSetOf<String>()
+
     fun initialize(context: Context) {
-        val prefs = ScreenlyPreferences(context)
+        val appCtx = context.applicationContext
+        appContextRef = appCtx
+        val prefs = ScreenlyPreferences(appCtx)
         repository.setOnboardingCompleted(prefs.hasCompletedOnboarding)
 
-        // Sync real system permissions
-        syncSystemPermissions(context)
+        // Restore persisted limits and alerts from local disk storage
+        val savedLimits = com.example.core.ScreenlySyncManager.loadLimitsFromDisk(appCtx)
+        val savedAlerts = com.example.core.ScreenlySyncManager.loadAlertsFromDisk(appCtx)
+        repository.restorePersistedData(savedLimits, savedAlerts)
+        alerts.value.forEach { notifiedAlertIds.add(it.id) }
 
-        // Load real installed apps
+        // Ensure notification channel is registered
+        com.example.core.ScreenlyNotificationHelper.ensureNotificationChannel(appCtx)
+
+        // Sync real system permissions and query UsageStatsManager
+        syncSystemPermissions(appCtx)
+
+        // Load real installed apps and real UsageStatsManager telemetry
         viewModelScope.launch {
-            val installed = InstalledAppsLoader.loadInstalledApps(context)
+            val installed = InstalledAppsLoader.loadInstalledApps(appCtx)
             if (installed.isNotEmpty()) {
                 repository.setInstalledApps(installed)
                 if (selectedStatsAppId.value.isBlank() || apps.value.none { it.id == selectedStatsAppId.value }) {
                     _selectedStatsAppId.value = installed.first().id
+                }
+            }
+            refreshRealUsageFromSystem(appCtx)
+        }
+
+        // Observe limits changes and persist to disk automatically
+        viewModelScope.launch {
+            limits.collect { currentLimits ->
+                com.example.core.ScreenlySyncManager.saveLimitsToDisk(appCtx, currentLimits)
+            }
+        }
+
+        // Observe alerts changes, persist to disk, and fire real Android notifications for new alerts
+        viewModelScope.launch {
+            alerts.collect { currentAlerts ->
+                com.example.core.ScreenlySyncManager.saveAlertsToDisk(appCtx, currentAlerts)
+                for (alert in currentAlerts) {
+                    if (!alert.isRead && notifiedAlertIds.add(alert.id)) {
+                        com.example.core.ScreenlyNotificationHelper.sendLimitNotification(
+                            context = appCtx,
+                            appId = alert.appId,
+                            appName = alert.appName,
+                            threshold = alert.threshold,
+                            minutesUsed = alert.minutesUsed,
+                            limitMinutes = alert.limitMinutes
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    fun refreshRealUsageFromSystem(context: Context) {
+        if (PermissionHelper.hasUsageStatsPermission(context)) {
+            val today = LocalDate.now()
+            for (offset in 0..6) {
+                val date = today.minusDays(offset.toLong())
+                val realRecords = com.example.core.RealUsageStatsManagerHelper.queryDailyUsageForDate(context, date)
+                if (realRecords.isNotEmpty()) {
+                    repository.updateRealUsageStats(date, realRecords)
                 }
             }
         }
@@ -181,6 +235,9 @@ class ScreenlyViewModel(
         // If in demo mode and permissions were enabled in demo, preserve unless real is checked
         if (!permissionState.value.isDemoModeActive || hasUsage || hasNotif) {
             repository.syncSystemPermissions(hasUsage, hasNotif)
+        }
+        if (hasUsage) {
+            refreshRealUsageFromSystem(context)
         }
     }
 
@@ -436,6 +493,44 @@ class ScreenlyViewModel(
         val usage = repository.getDailyUsage(0).value.firstOrNull { it.app.id == appId }
         if (usage != null) {
             _limitReachedDialogApp.value = usage
+        }
+    }
+
+    fun getSyncBase64Token(): String {
+        return com.example.core.ScreenlySyncManager.buildBase64SyncToken(
+            apps = apps.value,
+            dailyUsage = dailyUsage.value,
+            limits = limits.value,
+            alerts = alerts.value,
+            permissionState = permissionState.value
+        )
+    }
+
+    fun syncToVercelUrl(context: Context, vercelUrl: String) {
+        if (vercelUrl.isBlank()) {
+            viewModelScope.launch {
+                _uiMessages.emit(UiNotificationMessage(message = "Ingresa la URL de tu despliegue en Vercel", isError = true))
+            }
+            return
+        }
+        com.example.core.ScreenlySyncManager.saveSyncUrl(context, vercelUrl)
+        viewModelScope.launch {
+            val payload = com.example.core.ScreenlySyncManager.buildSyncPayloadJson(
+                apps = apps.value,
+                dailyUsage = dailyUsage.value,
+                limits = limits.value,
+                alerts = alerts.value,
+                permissionState = permissionState.value
+            )
+            val result = com.example.core.ScreenlySyncManager.pushSyncToVercelEndpoint(vercelUrl, payload)
+            result.fold(
+                onSuccess = { msg ->
+                    _uiMessages.emit(UiNotificationMessage(message = msg))
+                },
+                onFailure = { err ->
+                    _uiMessages.emit(UiNotificationMessage(message = err.message ?: "Error al sincronizar con Vercel", isError = true))
+                }
+            )
         }
     }
 }

@@ -5,7 +5,7 @@
   "description": "Screenly - Control y gestión inteligente del tiempo de uso de aplicaciones para bienestar digital",
   "main": "index.html",
   "scripts": {
-    "build": "echo 'Screenly build ready for Vercel'",
+    "build": "mkdir -p public && cp index.html styles.css app.js public/ && echo 'Screenly build ready for Vercel'",
     "start": "npx serve ."
   },
   "keywords": [

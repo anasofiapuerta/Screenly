@@ -453,6 +453,11 @@ fun ScreenlyApp(
                 navController.navigate("onboarding") {
                     popUpTo(0) { inclusive = true }
                 }
+            },
+            onCopySyncToken = {
+                val token = viewModel.getSyncBase64Token()
+                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                clipboard?.setPrimaryClip(android.content.ClipData.newPlainText("Screenly Sync Token", token))
             }
         )
     }

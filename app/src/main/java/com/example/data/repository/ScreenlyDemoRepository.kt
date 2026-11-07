@@ -190,6 +190,8 @@ class ScreenlyDemoRepository : ScreenlyRepository {
     )
     override val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
 
+    private val realUsageByDate = java.util.concurrent.ConcurrentHashMap<LocalDate, Map<String, com.example.core.RealAppUsageRecord>>()
+
     override fun setInstalledApps(installedApps: List<AppInfo>) {
         if (installedApps.isEmpty()) return
         val current = _apps.value
@@ -199,29 +201,43 @@ class ScreenlyDemoRepository : ScreenlyRepository {
         _apps.value = merged.sortedBy { it.name.lowercase() }
     }
 
+    override fun updateRealUsageStats(
+        date: LocalDate,
+        usageMap: Map<String, com.example.core.RealAppUsageRecord>
+    ) {
+        if (usageMap.isNotEmpty()) {
+            realUsageByDate[date] = usageMap
+            // Evaluate active limits against real usage for today
+            if (date == LocalDate.now()) {
+                _limits.value.forEach { limit ->
+                    checkAndTriggerAlertsForLimit(limit)
+                }
+            }
+        }
+    }
+
+    override fun restorePersistedData(
+        savedLimits: List<AppLimit>?,
+        savedAlerts: List<AlertItem>?
+    ) {
+        if (!savedLimits.isNullOrEmpty()) {
+            _limits.value = savedLimits
+        }
+        if (!savedAlerts.isNullOrEmpty()) {
+            _alerts.value = savedAlerts
+        }
+    }
+
     override fun getDailyUsage(dateOffsetDays: Int): StateFlow<List<DailyAppUsage>> {
-        val safeOffset = dateOffsetDays.coerceIn(0, 6)
-        val currentLimits = _limits.value.associateBy { it.appId }
-
-        val usageList = _apps.value.map { app ->
-            val history = appHistoricalMinutes[app.id] ?: listOf(8, 12, 10, 15, 7, 10, 5)
-            val minutes = history.getOrElse(safeOffset) { 0 }
-            val launches = (minutes / 5).coerceAtLeast(1)
-            DailyAppUsage(
-                app = app,
-                minutesUsed = minutes,
-                launches = launches,
-                limit = currentLimits[app.id]
-            )
-        }.sortedByDescending { it.minutesUsed }
-
-        return MutableStateFlow(usageList).asStateFlow()
+        val targetDate = LocalDate.now().minusDays(dateOffsetDays.toLong())
+        return getDailyUsageForDate(targetDate)
     }
 
     override fun getDailyUsageForDate(date: LocalDate): StateFlow<List<DailyAppUsage>> {
         val today = LocalDate.now()
         val daysDiff = ChronoUnit.DAYS.between(date, today).toInt()
         val currentLimits = _limits.value.associateBy { it.appId }
+        val realForDate = realUsageByDate[date] ?: emptyMap()
 
         val usageList = when {
             daysDiff < 0 -> {
@@ -233,20 +249,40 @@ class ScreenlyDemoRepository : ScreenlyRepository {
             daysDiff in 0..6 -> {
                 // Últimos 7 días (0 = hoy, 1 = ayer, ...)
                 _apps.value.map { app ->
+                    val realRecord = realForDate[app.packageName]
                     val history = appHistoricalMinutes[app.id] ?: listOf(8, 12, 10, 15, 7, 10, 5)
-                    val minutes = history.getOrElse(daysDiff) { 0 }
-                    val launches = (minutes / 5).coerceAtLeast(if (minutes > 0) 1 else 0)
+                    val fallbackMinutes = history.getOrElse(daysDiff) { 0 }
+                    val minutes = if (realRecord != null && realRecord.minutesUsed > 0) {
+                        realRecord.minutesUsed
+                    } else {
+                        fallbackMinutes
+                    }
+                    val launches = if (realRecord != null && realRecord.launches > 0) {
+                        realRecord.launches
+                    } else {
+                        (minutes / 5).coerceAtLeast(if (minutes > 0) 1 else 0)
+                    }
                     DailyAppUsage(app = app, minutesUsed = minutes, launches = launches, limit = currentLimits[app.id])
                 }.sortedByDescending { it.minutesUsed }
             }
             else -> {
                 // Cualquier día seleccionado del pasado (> 6 días)
                 _apps.value.map { app ->
+                    val realRecord = realForDate[app.packageName]
                     val history = appHistoricalMinutes[app.id] ?: listOf(8, 12, 10, 15, 7, 10, 5)
                     val base = history[Math.floorMod(date.dayOfMonth, history.size)]
                     val variance = Math.floorMod(date.dayOfYear * 7 + app.id.hashCode(), 15) - 7
-                    val minutes = (base + variance).coerceAtLeast(4)
-                    val launches = (minutes / 5).coerceAtLeast(1)
+                    val fallbackMinutes = (base + variance).coerceAtLeast(4)
+                    val minutes = if (realRecord != null && realRecord.minutesUsed > 0) {
+                        realRecord.minutesUsed
+                    } else {
+                        fallbackMinutes
+                    }
+                    val launches = if (realRecord != null && realRecord.launches > 0) {
+                        realRecord.launches
+                    } else {
+                        (minutes / 5).coerceAtLeast(1)
+                    }
                     DailyAppUsage(app = app, minutesUsed = minutes, launches = launches, limit = currentLimits[app.id])
                 }.sortedByDescending { it.minutesUsed }
             }

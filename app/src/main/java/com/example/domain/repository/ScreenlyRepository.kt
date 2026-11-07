@@ -70,6 +70,10 @@ interface ScreenlyRepository {
 
     fun setInstalledApps(installedApps: List<AppInfo>)
 
+    fun updateRealUsageStats(date: LocalDate, usageMap: Map<String, com.example.core.RealAppUsageRecord>)
+
+    fun restorePersistedData(savedLimits: List<AppLimit>?, savedAlerts: List<AlertItem>?)
+
     fun toggleDemoMode(enabled: Boolean)
 
     fun triggerSimulatedLimitReached(appId: String)

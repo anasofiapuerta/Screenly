@@ -46,7 +46,8 @@ fun SimulatorBottomSheet(
     onToggleUsagePermission: (Boolean) -> Unit,
     onToggleNotificationPermission: (Boolean) -> Unit,
     onTriggerLimit100: (String) -> Unit,
-    onResetOnboarding: () -> Unit = {}
+    onResetOnboarding: () -> Unit = {},
+    onCopySyncToken: () -> Unit = {}
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -211,6 +212,41 @@ fun SimulatorBottomSheet(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text("Reiniciar flujo de bienvenida (Onboarding)")
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                )
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Text(
+                        text = "Sincronización con Web (Vercel)",
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Exporta las estadísticas, apps instaladas, límites y alertas reales del dispositivo Android hacia la versión Web de Vercel.",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    FilledTonalButton(
+                        onClick = {
+                            onCopySyncToken()
+                            onDismiss()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("copy_vercel_sync_token_button")
+                    ) {
+                        Text("Copiar Token de Sincronización Android")
                     }
                 }
             }
